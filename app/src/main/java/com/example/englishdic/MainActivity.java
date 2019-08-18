@@ -167,7 +167,19 @@ public class MainActivity extends AppCompatActivity {
                         // ...
                     }
                 });
-    }
+    }/*
+    private void makePermanet() {
+        String password="passworrd";
+        String email="example@example.com";
+
+        AuthCredential credential = EmailAuthProvider.getCredential(email,password);
+        mAuth.getCurrentUser().linkWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+
+            }
+        });
+    }*/
 
     private void signInAnonymously() {
         mAuth.signInAnonymously()

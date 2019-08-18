@@ -81,18 +81,6 @@ public class ExampleDialog extends AppCompatDialogFragment {
         return builder.create();
     }
 
-    private void makePermanet() {
-        String password="passworrd";
-        String email="example@example.com";
-
-        AuthCredential credential = EmailAuthProvider.getCredential(email,password);
-        mAuth.getCurrentUser().linkWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
-
-            }
-        });
-    }
 
     private void addDictionary() {
          String word = editTextWord.getText().toString().trim();
