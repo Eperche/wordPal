@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "642490320019",
+    "firebase_url": "https://englishdic-80c3a.firebaseio.com",
+    "project_id": "englishdic-80c3a",
+    "storage_bucket": "englishdic-80c3a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:642490320019:android:dd059d7bdfb15a7f",
+        "android_client_info": {
+          "package_name": "com.example.englishdic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "642490320019-mf45aekbve4us4acjii0dl8orqr4anb1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.englishdic",
+            "certificate_hash": "9347cdbc8a8ce4a2e341c9a752c3bab1efd22a80"
+          }
+        },
+        {
+          "client_id": "642490320019-umig27jdgd70v4020hllmgtn4hn50dol.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaMZJ4AV_BAYKECsBrJ0eNA8VK1B3vK1c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "642490320019-umig27jdgd70v4020hllmgtn4hn50dol.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

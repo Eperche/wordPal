@@ -1,0 +1,114 @@
+package com.example.englishdic;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatDialogFragment;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.englishdic.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import static android.widget.Toast.LENGTH_SHORT;
+
+public class ExampleDialog extends AppCompatDialogFragment {
+
+    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabaseUser;
+    private FirebaseUser mCurrentUser;
+    private FirebaseAuth mAuth;
+    private EditText editTextWord;
+    private EditText editTextMeaning;
+
+
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+
+
+
+        mAuth = FirebaseAuth.getInstance();
+
+      //  makePermanet();
+        mCurrentUser =mAuth.getCurrentUser();
+        mDatabaseUser = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
+        mDatabase = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
+
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        View view = inflater.inflate(R.layout.open_dialog,null);
+
+        builder.setView(view)
+                .setTitle("Add")
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        addDictionary();
+
+                    }
+                });
+
+        editTextWord = view.findViewById(R.id.edit_word);
+        editTextMeaning = view.findViewById(R.id.edit_meaning);
+
+        return builder.create();
+    }
+
+    private void makePermanet() {
+        String password="passworrd";
+        String email="example@example.com";
+
+        AuthCredential credential = EmailAuthProvider.getCredential(email,password);
+        mAuth.getCurrentUser().linkWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+
+            }
+        });
+    }
+
+    private void addDictionary() {
+         String word = editTextWord.getText().toString().trim();
+         String meaning = editTextMeaning.getText().toString().trim();
+
+         if(!TextUtils.isEmpty(word) && !TextUtils.isEmpty(meaning)){
+             final DatabaseReference newPost = mDatabase.push();
+             addNewSample(newPost,word,meaning);
+         }
+    }
+
+    private void addNewSample(DatabaseReference newPost,String word, String meaning) {
+            Dictionary dictionary = new Dictionary(word,meaning);
+            newPost.setValue(dictionary);
+
+    }
+
+
+}
