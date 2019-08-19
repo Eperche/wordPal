@@ -4,6 +4,7 @@ package com.example.englishdic;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -104,7 +105,11 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),2);
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),1);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                gridLayoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(gridLayoutManager);
         adapter.startListening();
         recyclerView.setAdapter(adapter);
