@@ -16,6 +16,7 @@ public class dictionaryViewHolder extends RecyclerView.ViewHolder {
    public TextView word;
     public TextView meaning;
     public TextView  date;
+
  //   RelativeLayout parentLayout;
 
     public dictionaryViewHolder(@NonNull View itemView) {
