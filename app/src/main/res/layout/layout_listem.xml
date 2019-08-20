@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:src="@mipmap/ic_launcher"
             android:text="Word Field"
-            android:textColor="#1F3ECC"
+            android:textColor="#2F74AA"
             android:textSize="18dp"
             android:textStyle="bold"/>
 
@@ -34,6 +34,17 @@
             android:text="word meaning"
             android:textColor="#000"
             android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/getDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/wordField"
+            android:layout_marginStart="19dp"
+            android:layout_toEndOf="@+id/wordField"
+            android:text="TextView"
+            android:textSize="8dp"
+            android:textStyle="italic" />
 
     </RelativeLayout>
 

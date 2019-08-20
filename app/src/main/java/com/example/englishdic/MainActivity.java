@@ -30,7 +30,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static java.text.DateFormat.getDateTimeInstance;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseUser;
+    private DatabaseReference mDatabasetimeStamp;
     private FirebaseUser mCurrentUser;
     DatabaseReference  databaseReference;
+    DatabaseReference  root;
     RecyclerView recyclerView;
     FirebaseRecyclerOptions <Dictionary> options;
     FirebaseRecyclerAdapter<Dictionary,dictionaryViewHolder> adapter;
@@ -52,8 +61,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mAuth = FirebaseAuth.getInstance();
+
 
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -66,7 +76,10 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     Log.d(TAG, "getCurrentUser() not null)");
                     final String user_id = mAuth.getCurrentUser().getUid();
+                    mCurrentUser = mAuth.getCurrentUser();
+                    databaseReference = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
 
+                    databaseReference.keepSynced(true);
                     showDictionary();
                     //checkUserExist();
                 }
@@ -75,7 +88,13 @@ public class MainActivity extends AppCompatActivity {
 
         };
 
-
+        addImage = (CircleImageView) findViewById(R.id.addWord);
+        addImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog();
+            }
+        });
 
 
     }
@@ -83,18 +102,39 @@ public class MainActivity extends AppCompatActivity {
     private void showDictionary() {
         Log.d(TAG, "showDictionary:success");
         recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
-        mCurrentUser = mAuth.getCurrentUser();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
+
 
         options = new FirebaseRecyclerOptions.Builder<Dictionary>()
                 .setQuery(databaseReference,Dictionary.class).build();
 
         adapter = new FirebaseRecyclerAdapter<Dictionary, dictionaryViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull dictionaryViewHolder holder, int position, @NonNull Dictionary model) {
+            protected void onBindViewHolder(@NonNull final dictionaryViewHolder holder, int position, @NonNull Dictionary model) {
+                final String post_key = getRef(position).getKey();
+
                 holder.word.setText(model.getWord());
                 holder.meaning.setText(model.getMeaing());
+
+                final DatabaseReference mDatabaseDickey = databaseReference.child(post_key);
+
+                mDatabaseDickey.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                      final   long timeStamp;
+                      if(dataSnapshot.hasChild("date")){
+                        timeStamp = (long) dataSnapshot.child("date").getValue();
+                   //     holder.date.setText(getDate( (long) dataSnapshot.child("date").getValue()));
+                      }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
             }
 
             @NonNull
@@ -106,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),1);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),2);
         recyclerView.setLayoutManager(gridLayoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getApplicationContext(),
                 gridLayoutManager.getOrientation());
@@ -122,13 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
 
-        addImage = (CircleImageView) findViewById(R.id.addWord);
-        addImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDialog();
-            }
-        });
+
 
         }
 
@@ -226,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void openDialog() {
         ExampleDialog exampleDialog = new ExampleDialog();
-        exampleDialog.show(getSupportFragmentManager(),"example dialog");
+        exampleDialog.show(getSupportFragmentManager()," DIALOG");
     }
     @Override
     protected void onStart() {
@@ -251,5 +285,12 @@ public class MainActivity extends AppCompatActivity {
         if(adapter!=null){
             adapter.startListening();
         }
+    }
+    public  String getDate(long timestamp)
+    {
+         Date date = new Date(timestamp);
+
+
+        return date.toString();
     }
 }

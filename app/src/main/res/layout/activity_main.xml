@@ -7,9 +7,12 @@
     tools:context=".MainActivity">
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recyclerview">
+        android:layout_above="@+id/addWord"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="-80dp">
 
     </android.support.v7.widget.RecyclerView>
 
@@ -18,8 +21,10 @@
         android:layout_width="65dp"
         android:layout_height="65dp"
         android:layout_alignParentStart="false"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="15dp"
         android:layout_marginBottom="15dp"
         android:src="@drawable/ic_add_circle_blue_48dp" />
 

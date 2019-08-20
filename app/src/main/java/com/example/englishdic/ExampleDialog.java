@@ -16,6 +16,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ExampleDialog extends AppCompatDialogFragment {
@@ -52,14 +56,14 @@ public class ExampleDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.open_dialog,null);
 
         builder.setView(view)
-                .setTitle("Add")
+                .setTitle("Add new word")
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 })
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         addDictionary();
@@ -87,6 +91,11 @@ public class ExampleDialog extends AppCompatDialogFragment {
     private void addNewSample(DatabaseReference newPost,String word, String meaning) {
             Dictionary dictionary = new Dictionary(word,meaning);
             newPost.setValue(dictionary);
+            Map map = new HashMap();
+            map.put("timestamp", ServerValue.TIMESTAMP);
+            //newPost.child("data").updateChildren(map);
+            newPost.child("date").setValue(ServerValue.TIMESTAMP);
+
 
     }
 
