@@ -10,7 +10,6 @@ import com.example.englishdic.R;
 
 import org.w3c.dom.Text;
 
-
 public class dictionaryViewHolder extends RecyclerView.ViewHolder {
 
    public TextView word;
