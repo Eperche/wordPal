@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     FirebaseRecyclerAdapter<Dictionary,dictionaryViewHolder> adapter;
     CircleImageView addImage;
 
+    private boolean flagDecoration = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,10 +81,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showDictionary() {
-
         Log.d(TAG, "showDictionary:success");
         recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
-        recyclerView.setHasFixedSize(true);
         mCurrentUser = mAuth.getCurrentUser();
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
@@ -107,11 +107,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),1);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                gridLayoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(gridLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getApplicationContext(),
+                gridLayoutManager.getOrientation());
+
+        if(!flagDecoration)//RecyclerView decorator not adding extra padding on refresh when adding this code
+        {
+            recyclerView.addItemDecoration(dividerItemDecoration);
+            flagDecoration = true;
+        }
+
         adapter.startListening();
+        recyclerView.setHasFixedSize(true);
+
         recyclerView.setAdapter(adapter);
 
         addImage = (CircleImageView) findViewById(R.id.addWord);

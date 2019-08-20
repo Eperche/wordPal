@@ -1,31 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="15dp"
-    android:id="@+id/parent_layout"
-    >
+    android:layout_height="wrap_content">
+    <View
+        android:layout_width="12dp"
+        android:layout_height="65dp"
+        android:background="@color/grayColor"/>
 
-    <TextView
-        android:id="@+id/wordField"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"
-        android:text="Word Field"
-        android:textColor="#1F3ECC"
-        android:textSize="20dp"
-        android:textStyle="bold"/>
+        android:padding="10dp"
+        android:layout_marginLeft="12dp">
 
-    <TextView
-        android:id="@+id/meaningField"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/wordField"
-        android:layout_alignStart="@+id/wordField"
-        android:layout_marginTop="4dp"
-        android:textStyle="italic"
-        android:text="word meaning"
-        android:textColor="#000"
-        android:textSize="16dp" />
+        <TextView
+            android:id="@+id/wordField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:text="Word Field"
+            android:textColor="#1F3ECC"
+            android:textSize="18dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/meaningField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wordField"
+            android:layout_alignStart="@+id/wordField"
+            android:layout_marginTop="2dp"
+            android:textStyle="italic"
+            android:text="word meaning"
+            android:textColor="#000"
+            android:textSize="14dp" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
