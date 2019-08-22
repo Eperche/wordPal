@@ -27,7 +27,7 @@
             android:id="@+id/wordPage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Words"/>
+            android:text="Word"/>
         <android.support.design.widget.TabItem
             android:id="@+id/sentences"
             android:text="Sentences"
