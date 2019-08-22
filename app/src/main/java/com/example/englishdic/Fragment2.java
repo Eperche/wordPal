@@ -20,5 +20,7 @@ public class Fragment2 extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+
+
     }
 }

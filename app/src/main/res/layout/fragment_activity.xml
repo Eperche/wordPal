@@ -7,5 +7,5 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="FRAGMENT 2" />
+        android:text="FRAGMENT 3" />
 </LinearLayout>

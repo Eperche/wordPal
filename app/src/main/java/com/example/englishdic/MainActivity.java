@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorAccent));
                     }
 
-                    else if (tab.getPosition()==2){
+                    else if (tab.getPosition()==1){
                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimary));
                         if(Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP){
                             getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimary));

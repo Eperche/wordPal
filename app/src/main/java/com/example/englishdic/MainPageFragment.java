@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +51,7 @@ public class MainPageFragment extends Fragment {
 
     private boolean flagDecoration = false;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class MainPageFragment extends Fragment {
 
 
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
