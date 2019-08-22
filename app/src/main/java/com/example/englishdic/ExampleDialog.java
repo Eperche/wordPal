@@ -24,8 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 
-
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -51,12 +49,8 @@ public class ExampleDialog extends AppCompatDialogFragment {
     private ImageButton imageButtonMeaning;
 
 
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-
-
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -95,9 +89,6 @@ public class ExampleDialog extends AppCompatDialogFragment {
         editTextMeaning = view.findViewById(R.id.edit_meaning);
         imageButtonEdit = view.findViewById(R.id.img_button_edit);
         imageButtonMeaning=view.findViewById(R.id.img_button_meaning);
-
-
-
 
 
         //set mic
@@ -163,8 +154,6 @@ public class ExampleDialog extends AppCompatDialogFragment {
                     editTextWord.setText(matches.get(0));
 
                 }
-
-
 
             }
 
@@ -272,18 +261,7 @@ public class ExampleDialog extends AppCompatDialogFragment {
         });
 
         return builder.create();
-
-
-
-
-
-
-
     }
-
-
-
-
 
     private void addDictionary() {
          String word = editTextWord.getText().toString().trim();
@@ -305,8 +283,6 @@ public class ExampleDialog extends AppCompatDialogFragment {
             mDatabase.keepSynced(true);
             newPost.keepSynced(true);
 
-
     }
-
 
 }
