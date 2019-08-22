@@ -8,10 +8,16 @@ import static java.text.DateFormat.getDateTimeInstance;
 
 public class Dictionary {
 
-    private String word,meaing;
+
+    private String word,meaing,sentence,meaningSentence;
     private Map<String, String> timestamp;
     public Dictionary() {
 
+    }
+
+    public void DictionarySet(String sentence,String meaningSentence) {
+        this.sentence = sentence;
+        this.meaningSentence = meaningSentence;
     }
 
     public Dictionary(String word, String meaing) {
@@ -37,6 +43,20 @@ public class Dictionary {
         return meaing;
     }
 
+    public String getSentence() {
+        return sentence;
+    }
+
+    public void setSentence(String sentence) {
+        this.sentence = sentence;
+    }
+    public String getMeaningSentence() {
+        return meaningSentence;
+    }
+
+    public void setMeaningSentence(String meaningSentence) {
+        this.meaningSentence = meaningSentence;
+    }
     public void setMeaing(String meaing) {
         this.meaing = meaing;
     }

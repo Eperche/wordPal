@@ -21,4 +21,13 @@
         android:layout_marginTop="10dp"
         android:hint="Enter the meaning" />
 
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/btnAddSentences"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_meaning"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/ic_note_add_custom_48dp" />
+
 </RelativeLayout>

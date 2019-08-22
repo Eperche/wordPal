@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/layoutListem">
     <View
         android:layout_width="12dp"
         android:layout_height="65dp"
-        android:background="@color/grayColor"/>
+        android:background="@color/colorSideDivider"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -44,7 +45,14 @@
             android:layout_toEndOf="@+id/wordField"
             android:text="TextView"
             android:textSize="8dp"
-            android:textStyle="italic" />
+            android:textStyle="italic" />ı
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/btnAddSentences"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_note_add_custom_48dp"
+            android:layout_alignParentRight="true"/>
+
 
     </RelativeLayout>
 

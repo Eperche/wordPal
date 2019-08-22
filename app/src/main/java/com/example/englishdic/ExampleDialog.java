@@ -46,7 +46,7 @@ public class ExampleDialog extends AppCompatDialogFragment {
         mDatabaseUser = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
         mDatabase = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
 
-
+        mDatabase.keepSynced(true);
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -57,6 +57,12 @@ public class ExampleDialog extends AppCompatDialogFragment {
 
         builder.setView(view)
                 .setTitle("Add new word")
+                .setNeutralButton("good", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -95,7 +101,8 @@ public class ExampleDialog extends AppCompatDialogFragment {
             map.put("timestamp", ServerValue.TIMESTAMP);
             //newPost.child("data").updateChildren(map);
             newPost.child("date").setValue(ServerValue.TIMESTAMP);
-
+            mDatabase.keepSynced(true);
+            newPost.keepSynced(true);
 
     }
 
