@@ -20,8 +20,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 
-public class ExampleDialog extends AppCompatDialogFragment {
+public class ExampleDialog extends AppCompatDialogFragment implements AdapterView.OnItemSelectedListener {
 
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabaseUser;
@@ -47,6 +53,9 @@ public class ExampleDialog extends AppCompatDialogFragment {
     private EditText editTextMeaning;
     private ImageButton imageButtonEdit;
     private ImageButton imageButtonMeaning;
+
+    Spinner spinner;
+    Spinner spinner1;
 
 
     @Override
@@ -58,9 +67,9 @@ public class ExampleDialog extends AppCompatDialogFragment {
         mCurrentUser =mAuth.getCurrentUser();
         mDatabaseUser = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
         mDatabase = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
-
-
         mDatabase.keepSynced(true);
+
+
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -77,7 +86,7 @@ public class ExampleDialog extends AppCompatDialogFragment {
 
                     }
                 })
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         addDictionary();
@@ -85,6 +94,13 @@ public class ExampleDialog extends AppCompatDialogFragment {
                     }
                 });
 
+        spinner =  view.findViewById(R.id.spinner);
+        spinner1 =  view.findViewById(R.id.spinner1);
+         ArrayAdapter arrayAdapter =  ArrayAdapter.createFromResource(getActivity(),R.array.languages,R.layout.support_simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setOnItemSelectedListener(this);
+        spinner1.setAdapter(arrayAdapter);
+        spinner1.setOnItemSelectedListener(this);
         editTextWord = view.findViewById(R.id.edit_word);
         editTextMeaning = view.findViewById(R.id.edit_meaning);
         imageButtonEdit = view.findViewById(R.id.img_button_edit);
@@ -285,4 +301,16 @@ public class ExampleDialog extends AppCompatDialogFragment {
 
     }
 
+
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        TextView myText = (TextView) view;
+      //  Toast.makeText(getActivity(), "You selected"+myText.getText(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }

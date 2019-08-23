@@ -12,6 +12,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -40,7 +42,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.support.v4.content.ContextCompat.getSystemService;
 
-public class MainPageFragment extends Fragment implements SentencesDialog.ExampleDialogListener{
+public class MainPageFragment extends Fragment  {
 
     private static final String TAG = "anonim" ;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -63,7 +65,7 @@ public class MainPageFragment extends Fragment implements SentencesDialog.Exampl
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
+            setHasOptionsMenu(true);
        /* View root = inflater.inflate(R.layout.tumlesik, container, false);
         a = root.findViewById(R.id.layoutListem);
         b = root.findViewById(R.id.mainPage);*/
@@ -80,7 +82,7 @@ public class MainPageFragment extends Fragment implements SentencesDialog.Exampl
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
      //   showB();
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+     //   FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -125,12 +127,24 @@ public class MainPageFragment extends Fragment implements SentencesDialog.Exampl
 
         adapter = new FirebaseRecyclerAdapter<Dictionary, dictionaryViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull dictionaryViewHolder holder, int position, @NonNull final Dictionary model) {
+            protected void onBindViewHolder(@NonNull final dictionaryViewHolder holder, int position, @NonNull final Dictionary model) {
                 final String post_key = getRef(position).getKey();
                 holder.word.setText(model.getWord());
-                holder.meaning.setText(model.getMeaing());
+                holder.meaning.setText(model.getMeaning());
 
                 final DatabaseReference mDatabaseDickey = databaseReference.child(post_key);//Sözcük push key değeri
+
+                holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        ChangeDialog changeDialog = new ChangeDialog();
+                        changeDialog.setEquivalent(model.getMeaning());
+                        changeDialog.setWord(model.getWord());
+                        changeDialog.setPost_key(post_key);
+                        changeDialog.show(getFragmentManager(),"change dialog");
+                        return false;
+                    }
+                });
 
                 holder.sentenceButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -140,7 +154,7 @@ public class MainPageFragment extends Fragment implements SentencesDialog.Exampl
                     }
                 });
 
-
+                holder.date.setVisibility(View.INVISIBLE);
                 mDatabaseDickey.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -168,7 +182,6 @@ public class MainPageFragment extends Fragment implements SentencesDialog.Exampl
                 return new dictionaryViewHolder(view);
             }
         };
-
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),1);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -292,6 +305,11 @@ public class MainPageFragment extends Fragment implements SentencesDialog.Exampl
         sentencesDialog.setWord(word);
         sentencesDialog.show(getFragmentManager(),"sentence dialog");
     }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
     @Override
     public void onStart() {
         mAuth.addAuthStateListener(mAuthListener);
@@ -323,8 +341,5 @@ public class MainPageFragment extends Fragment implements SentencesDialog.Exampl
         return date.toString();
     }
 
-    @Override
-    public void applyTexts(String post_key, String word) {
 
-    }
 }

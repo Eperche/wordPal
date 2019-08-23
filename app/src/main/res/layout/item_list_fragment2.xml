@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/layoutListem">
+    <View
+        android:layout_width="12dp"
+        android:layout_height="65dp"
+        android:background="@color/colorSideDivider"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginLeft="12dp">
+
+        <TextView
+            android:id="@+id/SentenceField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:text="Word Field"
+            android:textColor="#2F74AA"
+            android:textSize="14dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/meaningSentenceField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/SentenceField"
+            android:layout_alignStart="@+id/SentenceField"
+            android:layout_marginTop="2dp"
+            android:textStyle="italic"
+            android:text="sentence meaning"
+            android:textColor="#000"
+            android:textSize="12dp" />
+
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

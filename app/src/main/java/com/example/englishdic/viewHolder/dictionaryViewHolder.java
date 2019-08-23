@@ -12,9 +12,11 @@ import com.example.englishdic.R;
 import org.w3c.dom.Text;
 
 public class dictionaryViewHolder extends RecyclerView.ViewHolder {
-
-   public TextView word;
+    public View mView;
+    public TextView word;
     public TextView meaning;
+    public TextView sentence;
+    public TextView meaningSentence;
     public TextView  date;
     public ImageButton sentenceButton;
 
@@ -22,12 +24,15 @@ public class dictionaryViewHolder extends RecyclerView.ViewHolder {
 
     public dictionaryViewHolder(@NonNull View itemView) {
         super(itemView);
-
+        mView = itemView;
         word    = (TextView) itemView.findViewById(R.id.wordField);
         meaning = (TextView) itemView.findViewById(R.id.meaningField);
+        sentence = (TextView) itemView.findViewById(R.id.SentenceField);
+        meaningSentence = (TextView) itemView.findViewById(R.id.meaningSentenceField);
         date    = (TextView) itemView.findViewById(R.id.getDate);
+
         sentenceButton = (ImageButton) itemView.findViewById(R.id.btnAddSentences);
-        date.setVisibility(View.INVISIBLE);
+       // date.setVisibility(View.INVISIBLE);
       //  parentLayout =itemView.findViewById(R.id.parent_layout);
 
     }

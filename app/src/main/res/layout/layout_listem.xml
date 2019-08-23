@@ -45,7 +45,7 @@
             android:layout_toEndOf="@+id/wordField"
             android:text="TextView"
             android:textSize="8dp"
-            android:textStyle="italic" />ı
+            android:textStyle="italic" />
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/btnAddSentences"
             android:layout_width="wrap_content"

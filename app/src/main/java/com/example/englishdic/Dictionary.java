@@ -1,7 +1,10 @@
 package com.example.englishdic;
 
+import com.google.firebase.database.Exclude;
+
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static java.text.DateFormat.getDateTimeInstance;
@@ -9,11 +12,13 @@ import static java.text.DateFormat.getDateTimeInstance;
 public class Dictionary {
 
 
-    private String word,meaing,sentence,meaningSentence;
+    private String word,meaning,sentence,meaningSentence;
     private Map<String, String> timestamp;
     public Dictionary() {
 
     }
+
+
 
     public void DictionarySet(String sentence,String meaningSentence) {
         this.sentence = sentence;
@@ -22,7 +27,7 @@ public class Dictionary {
 
     public Dictionary(String word, String meaing) {
         this.word = word;
-        this.meaing = meaing;
+        this.meaning = meaing;
     }
     public void setTimestamp(Map<String, String> timeStamp) {
         this.timestamp= timestamp;
@@ -39,8 +44,8 @@ public class Dictionary {
         this.word = word;
     }
 
-    public String getMeaing() {
-        return meaing;
+    public String getMeaning() {
+        return meaning;
     }
 
     public String getSentence() {
@@ -57,8 +62,8 @@ public class Dictionary {
     public void setMeaningSentence(String meaningSentence) {
         this.meaningSentence = meaningSentence;
     }
-    public void setMeaing(String meaing) {
-        this.meaing = meaing;
+    public void setMeaning(String meaing) {
+        this.meaning = meaing;
     }
 
     public static String getTimeDate(long timestamp)
@@ -70,5 +75,13 @@ public class Dictionary {
         } catch(Exception e) {
             return "date";
         }
+    }
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("word", word);
+        result.put("meaning", meaning);
+
+        return result;
     }
 }
