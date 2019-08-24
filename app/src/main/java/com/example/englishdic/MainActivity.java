@@ -2,17 +2,24 @@ package com.example.englishdic;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabItem;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.widget.Toast;
+import androidx.annotation.Nullable;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements SentencesDialog.ExampleDialogListener {
     public Toolbar toolbar;
@@ -22,10 +29,16 @@ public class MainActivity extends AppCompatActivity implements SentencesDialog.E
     public TabItem tabWords;
     public  TabItem tabSentences;
 
+
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
 
         toolbar =(Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle("Tablayout");
@@ -35,6 +48,12 @@ public class MainActivity extends AppCompatActivity implements SentencesDialog.E
         tabWords =(TabItem) findViewById(R.id.wordPage);
         tabSentences=(TabItem)findViewById(R.id.sentences);
         viewPager =(ViewPager)findViewById(R.id.viewPager);
+
+
+
+
+
+
 
 
         pagerAdapter =new PageAdapter(getSupportFragmentManager(),tabLayout.getTabCount());

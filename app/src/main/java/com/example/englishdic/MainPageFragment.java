@@ -1,15 +1,15 @@
 package com.example.englishdic;
 
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +21,11 @@ import android.widget.Toast;
 import com.example.englishdic.viewHolder.dictionaryViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -40,8 +45,6 @@ import java.util.concurrent.Executor;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static android.support.v4.content.ContextCompat.getSystemService;
-
 public class MainPageFragment extends Fragment  {
 
     private static final String TAG = "anonim" ;
@@ -54,6 +57,9 @@ public class MainPageFragment extends Fragment  {
     FirebaseRecyclerOptions <Dictionary> options;
     FirebaseRecyclerAdapter<Dictionary,dictionaryViewHolder> adapter;
     CircleImageView addImage;
+    private AdView mAdView;
+
+
 
 
 
@@ -84,6 +90,27 @@ public class MainPageFragment extends Fragment  {
      //   showB();
      //   FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mAuth = FirebaseAuth.getInstance();
+
+        MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+
+            }
+        });
+
+        mAdView = getView().findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("47900e12c2797100").build();
+        mAdView.loadAd(adRequest);
+
+
+
+
+
+
+
+
+
+
 
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
