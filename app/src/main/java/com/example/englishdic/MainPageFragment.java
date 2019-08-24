@@ -1,22 +1,24 @@
 package com.example.englishdic;
 
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.englishdic.viewHolder.dictionaryViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -37,8 +39,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 
 import java.util.Date;
 import java.util.concurrent.Executor;
@@ -101,13 +103,6 @@ public class MainPageFragment extends Fragment  {
         mAdView = getView().findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice("47900e12c2797100").build();
         mAdView.loadAd(adRequest);
-
-
-
-
-
-
-
 
 
 
@@ -335,8 +330,61 @@ public class MainPageFragment extends Fragment  {
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+
+       SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                firebaseSearch(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                firebaseSearch(newText);
+                return false;
+            }
+        });
+
+
         super.onCreateOptionsMenu(menu,inflater);
+
+
+
     }
+
+    private void firebaseSearch(String searchText){
+
+        String query= searchText.toLowerCase();
+        Query irebaseSearcQuery=databaseReference.orderByChild("word").startAt(query).endAt(query+"\uf8fff");
+        options =new FirebaseRecyclerOptions.Builder<Dictionary>().setQuery(irebaseSearcQuery,Dictionary.class).build();
+
+        adapter = new FirebaseRecyclerAdapter<Dictionary, dictionaryViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull dictionaryViewHolder dictionaryViewHolder, int i, @NonNull Dictionary dictionary) {
+
+                dictionaryViewHolder.word.setText(dictionary.getWord());
+                dictionaryViewHolder.meaning.setText(dictionary.getMeaning());
+
+            }
+
+            @NonNull
+            @Override
+            public dictionaryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+                View view =LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_listem,parent,false);
+                dictionaryViewHolder dictionaryViewHolder =new dictionaryViewHolder(view);
+                return dictionaryViewHolder;
+            }
+        };
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),1);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        adapter.startListening();
+        recyclerView.setAdapter(adapter);
+
+    }
+
+
     @Override
     public void onStart() {
         mAuth.addAuthStateListener(mAuthListener);
