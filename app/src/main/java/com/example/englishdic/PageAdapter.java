@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import android.view.ViewGroup;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ public class PageAdapter extends FragmentPagerAdapter {
     private Map<Integer, String> mFragmentTags;
     private FragmentManager mFragmentManager;
     private Context mContext;
+
 
 
 
