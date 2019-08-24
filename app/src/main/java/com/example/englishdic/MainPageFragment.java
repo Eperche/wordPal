@@ -47,7 +47,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainPageFragment extends Fragment  {
 
-    private static final String TAG = "anonim" ;
+    private static final String TAG = "STT" ;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseUser;

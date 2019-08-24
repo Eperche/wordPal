@@ -1,25 +1,35 @@
 package com.example.englishdic;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-
-import androidx.appcompat.app.AppCompatDialogFragment;
+import android.speech.tts.TextToSpeech;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +39,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 
 import java.util.ArrayList;
@@ -36,7 +48,7 @@ import java.util.Locale;
 
 
 public class ExampleDialog extends AppCompatDialogFragment implements AdapterView.OnItemSelectedListener {
-
+    private static final String TAG = "STT" ;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabaseUser;
     private FirebaseUser mCurrentUser;
@@ -48,6 +60,17 @@ public class ExampleDialog extends AppCompatDialogFragment implements AdapterVie
 
     Spinner spinner;
     Spinner spinner1;
+
+    int sum = 0;
+
+    private TextToSpeech mTTS;
+    Locale[] locales = Locale.getAvailableLocales();
+    Locale loc;
+    List<Locale> localeList = new ArrayList<Locale>();
+    List<String> country = new ArrayList<String>();
+
+    // * - Move these two variables out here
+    ArrayAdapter<Locale> aa;
 
 
     @Override
@@ -85,20 +108,45 @@ public class ExampleDialog extends AppCompatDialogFragment implements AdapterVie
 
                     }
                 });
-
+        mTTS = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if (i == TextToSpeech.SUCCESS) {
+                   Log.d(TAG, "TextToSpeech.SUCCESS");
+                    // * - delay important tasks until TTS is initialized
+                    startWhenTTSIsInitialized();
+                }
+            }
+        });
         spinner =  view.findViewById(R.id.spinner);
+
         spinner1 =  view.findViewById(R.id.spinner1);
          ArrayAdapter arrayAdapter =  ArrayAdapter.createFromResource(getActivity(),R.array.languages,R.layout.support_simple_spinner_dropdown_item);
-        spinner.setAdapter(arrayAdapter);
-        spinner.setOnItemSelectedListener(this);
+     //   spinner.setAdapter(arrayAdapter);
+     //   spinner.setOnItemSelectedListener(this);
         spinner1.setAdapter(arrayAdapter);
+
         spinner1.setOnItemSelectedListener(this);
+
         editTextWord = view.findViewById(R.id.edit_word);
         editTextMeaning = view.findViewById(R.id.edit_meaning);
         imageButtonEdit = view.findViewById(R.id.img_button_edit);
         imageButtonMeaning=view.findViewById(R.id.img_button_meaning);
 
+        LinkedHashSet<String> hashSet = new LinkedHashSet<String>();
+        Locale[] locales = Locale.getAvailableLocales();
+        for(Locale l:locales)
+        {
+            hashSet.add(l.getDisplayLanguage());
+        }
 
+
+
+
+        return builder.create();
+    }
+
+    private void startMic() {
         //set mic
 
         final SpeechRecognizer mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext());
@@ -107,16 +155,25 @@ public class ExampleDialog extends AppCompatDialogFragment implements AdapterVie
 
 
         final Intent mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
-                Locale.getDefault());
+
+      /*  mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);*/
+      /*  mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE,
+                "en-US");*/
+    //    String languagePref = loc.toString();//or, whatever iso code...
+
+
+        Log.d(TAG, "TextToSpeech ===="+ loc);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, loc.getDisplayName());
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, loc.getDisplayName());
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, loc.getDisplayName());
+
 
         final Intent kSpeechRecognzierIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
-                Locale.getDefault());
+       /* mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);*/
+        kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE,
+                "en-US");
 
 
         mSpeechRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -267,9 +324,47 @@ public class ExampleDialog extends AppCompatDialogFragment implements AdapterVie
 
             }
         });
-
-        return builder.create();
     }
+
+    private void startWhenTTSIsInitialized() {
+        Log.i("STT", "startWhenTTSIsInitialized() was called");
+     /*   for (Locale locale : locales) {
+            int res = mTTS.isLanguageAvailable(locale);
+            if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
+                sum++;
+                localeList.add(locale);
+                // * - 'country' is used to populate the adapter, so
+                // this line must come first
+               country.add(locale.getDisplayName());
+            }
+        }*/
+
+
+    /*    ArrayList<String> localCountries = new ArrayList<String>();
+        for(Locale l:locales)
+        {
+
+            localCountries.add(l.getDisplayLanguage());
+        }*/
+        LinkedHashSet<Locale> hashSet = new LinkedHashSet<Locale>();
+        for(Locale l:locales)
+        {
+            int res = mTTS.isLanguageAvailable(l);
+            if(res == TextToSpeech.LANG_COUNTRY_AVAILABLE){
+                hashSet.add(l);
+            }
+
+        }
+        List<Locale> list = new ArrayList<Locale>(hashSet);
+        //Creating the ArrayAdapter instance having the country list
+        // * - now it's safe to set the adapter because the country list has been populated
+        aa = new ArrayAdapter<Locale>(getActivity(), android.R.layout.simple_spinner_item,list);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Setting the ArrayAdapter data on the Spinner
+        spinner.setAdapter(aa);
+        spinner.setOnItemSelectedListener(this);
+    }
+
 
     private void addDictionary() {
          String word = editTextWord.getText().toString().trim();
@@ -298,7 +393,13 @@ public class ExampleDialog extends AppCompatDialogFragment implements AdapterVie
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         TextView myText = (TextView) view;
-      //  Toast.makeText(getActivity(), "You selected"+myText.getText(), Toast.LENGTH_SHORT).show();
+        loc = (Locale) spinner.getSelectedItem();
+        startMic();
+
+        Toast.makeText(getActivity(), "You selected "+myText.getText(), Toast.LENGTH_SHORT).show();
+    }
+    public void getSelectedUser(View v){
+
     }
 
     @Override
