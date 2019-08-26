@@ -62,7 +62,7 @@ public class Dictionary {
     public void setMeaningSentence(String meaningSentence) {
         this.meaningSentence = meaningSentence;
     }
-    public void setMeaning(String meaing) {
+   public void setMeaning(String meaing) {
         this.meaning = meaing;
     }
 

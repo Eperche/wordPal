@@ -2,6 +2,9 @@ package com.example.englishdic;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.ads.AdRequest;
@@ -14,6 +17,8 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.database.FirebaseDatabase;
+
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.PagerAdapter;
@@ -21,22 +26,25 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity implements SentencesDialog.ExampleDialogListener {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+public class MainActivity extends AppCompatActivity implements ExampleDialog.ExampleDialogListener/*/, MainPageFragment.MainPageFragmentListener */{
     public Toolbar toolbar;
     public  TabLayout tabLayout;
     public  ViewPager viewPager;
     public PagerAdapter pagerAdapter;
     public TabItem tabWords;
     public  TabItem tabSentences;
-
-
+    private  List<Languages> languagesList = new ArrayList<>();
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
 
 
@@ -149,4 +157,13 @@ public class MainActivity extends AppCompatActivity implements SentencesDialog.E
         viewPager.setCurrentItem(1);
 
     }
+
+
+  /*  @Override
+    public void applyList(List<Languages> mlist) {
+        languagesList=mlist;
+        Log.i("STT","MainActivty applyList size :"+mlist.size());
+        ExampleDialog exampleDialog =new ExampleDialog();
+        exampleDialog.sendGetRequestLanguage(mlist);
+    }*/
 }

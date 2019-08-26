@@ -1,7 +1,20 @@
 package com.example.englishdic;
 
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+
+import android.content.Context;
 import android.os.Bundle;
+
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.speech.tts.TextToSpeech;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,14 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
+
 import androidx.core.view.MenuItemCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.example.englishdic.viewHolder.dictionaryViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -30,9 +38,9 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
+
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,17 +50,30 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executor;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainPageFragment extends Fragment  {
+public class MainPageFragment extends Fragment {
 
+
+    public List<Languages> getLanguagesList() {
+        return languagesList;
+    }
+   // private MainPageFragmentListener mainPageFragmentlistener; dil listesi için gerek yok exampleDialog sınıfından türetilerek aciliyor yani fragment yeniden olusuturuloyr
+
+    private   List<Languages> languagesList = new ArrayList<>();
+    Locale[] locales = Locale.getAvailableLocales();
     private static final String TAG = "STT" ;
+    private TextToSpeech mTTS;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabaseUser;
+  //  private DatabaseReference mDatabaseUser;
     private FirebaseUser mCurrentUser;
     DatabaseReference  databaseReference;
     RecyclerView recyclerView;
@@ -60,7 +81,7 @@ public class MainPageFragment extends Fragment  {
     FirebaseRecyclerAdapter<Dictionary,dictionaryViewHolder> adapter;
     CircleImageView addImage;
     private AdView mAdView;
-
+    ExampleDialog exampleDialog = new ExampleDialog();
 
 
 
@@ -92,6 +113,37 @@ public class MainPageFragment extends Fragment  {
      //   showB();
      //   FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mAuth = FirebaseAuth.getInstance();
+
+        mTTS = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS){
+
+                    Log.i("STT", "getLanguages() was called");
+
+                    int x = 0;
+                    int y = 0;
+
+                    for(Locale l:locales)
+                    {
+                        int res = mTTS.isLanguageAvailable(l);
+                        if(res == TextToSpeech.LANG_COUNTRY_AVAILABLE){
+                            Languages languages = new Languages(l.getDisplayName(),l.getLanguage());
+                            //   Toast.makeText(getActivity(), l.getDisplayName(), Toast.LENGTH_SHORT).show();
+                            languagesList.add(languages);
+            /*    hashSet.add(l);
+                listem.add(l.getLanguage());*/
+
+                        }
+                    }
+               //     Log.d("STT", "MainPageFrag-size: "+languagesList.size());
+                    //mainPageFragmentlistener.applyList(languagesList);
+
+
+                }
+              
+            }
+        });
 
         MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
             @Override
@@ -172,7 +224,7 @@ public class MainPageFragment extends Fragment  {
                     @Override
                     public void onClick(View v) {
                         openSentencesDialog(post_key,model.getWord());
-                        Log.d(TAG, post_key+" :Postkeysuccess");
+                   //     Log.d(TAG, post_key+" :Postkeysuccess");
                     }
                 });
 
@@ -226,7 +278,7 @@ public class MainPageFragment extends Fragment  {
         }
 
 
-    private void checkUserExist() {
+ /*   private void checkUserExist() {
 
         final String user_id = mAuth.getCurrentUser().getUid();
         mDatabaseUser = FirebaseDatabase.getInstance().getReference().child(user_id);
@@ -248,9 +300,9 @@ public class MainPageFragment extends Fragment  {
 
             }
         });
-    }
+    }*/
 
-    private void makePermanent() {
+ /*   private void makePermanent() {
         String password="passworrd";
         String email="example@example.com";
         AuthCredential credential = EmailAuthProvider.getCredential(email, password);
@@ -273,7 +325,8 @@ public class MainPageFragment extends Fragment  {
                         // ...
                     }
                 });
-    }/*
+    }*/
+ /*
     private void makePermanet() {
         String password="passworrd";
         String email="example@example.com";
@@ -294,7 +347,7 @@ public class MainPageFragment extends Fragment  {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInAnonymously:success");
+                           // Log.d(TAG, "signInAnonymously:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                           //  makePermanent();
                            // Toast.makeText(MainPageFragment.this, "SignInAnony..Ekleniyor.."+user.getUid(), Toast.LENGTH_SHORT).show();
@@ -318,13 +371,14 @@ public class MainPageFragment extends Fragment  {
     }
 
     private void openDialog() {
-        ExampleDialog exampleDialog = new ExampleDialog();
+        exampleDialog.languagesList = this.getLanguagesList();
         exampleDialog.show(getFragmentManager(),"word dialog");
     }
     private void openSentencesDialog(String post_key,String word) {
-        SentencesDialog sentencesDialog = new SentencesDialog();
+        ExampleDialog sentencesDialog = new ExampleDialog();
         sentencesDialog.setPost_key(post_key);
         sentencesDialog.setWord(word);
+        sentencesDialog.languagesList=languagesList;
         sentencesDialog.show(getFragmentManager(),"sentence dialog");
     }
 
@@ -332,7 +386,7 @@ public class MainPageFragment extends Fragment  {
         inflater.inflate(R.menu.main_menu, menu);
         MenuItem item = menu.findItem(R.id.action_search);
 
-       SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -356,7 +410,7 @@ public class MainPageFragment extends Fragment  {
 
     private void firebaseSearch(String searchText){
 
-        String query= searchText.toLowerCase();
+        String query= searchText;
         Query irebaseSearcQuery=databaseReference.orderByChild("word").startAt(query).endAt(query+"\uf8fff");
         options =new FirebaseRecyclerOptions.Builder<Dictionary>().setQuery(irebaseSearcQuery,Dictionary.class).build();
 
@@ -366,7 +420,7 @@ public class MainPageFragment extends Fragment  {
 
                 dictionaryViewHolder.word.setText(dictionary.getWord());
                 dictionaryViewHolder.meaning.setText(dictionary.getMeaning());
-
+                dictionaryViewHolder.date.setVisibility(View.INVISIBLE);
             }
 
             @NonNull
@@ -415,6 +469,19 @@ public class MainPageFragment extends Fragment  {
 
         return date.toString();
     }
+  /*  @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
+        try {
+            mainPageFragmentlistener =(MainPageFragmentListener) context;
+        } catch (ClassCastException e)  {
+            throw new ClassCastException(context.toString()+"must implement MainPageFragmentListener");
+        }
+    }
+    public interface MainPageFragmentListener{
+        void applyList(List<Languages> mlist);
+    }
 
+*/
 }

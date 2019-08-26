@@ -36,7 +36,7 @@ public class SentencesDialog extends AppCompatDialogFragment {
     private String word;
     private TextView underlined;
 
-    private  ExampleDialogListener listener;
+//    private  ExampleDialogListener listener;
 
     public void setWord(String word) {
         this.word = word;
@@ -79,14 +79,14 @@ public class SentencesDialog extends AppCompatDialogFragment {
                 .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        addDictionary();
+                        addSentences();
 
                     }
                 })
                 .setNeutralButton("See Sentences", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.applyTexts(post_key,word);
+                //        listener.applyTexts(post_key,word);
                     }
                 });
 
@@ -97,17 +97,17 @@ public class SentencesDialog extends AppCompatDialogFragment {
         return builder.create();
     }
 
-    private void addDictionary() {
+    private void addSentences() {
         String sentence = editTextWord.getText().toString().trim();
         String SentenceMeaning = editTextMeaning.getText().toString().trim();
 
         if(!TextUtils.isEmpty(sentence) && !TextUtils.isEmpty(SentenceMeaning)){
             final DatabaseReference newPost = mDatabase.push();
-            addNewSample(newPost,sentence,SentenceMeaning);
+            addNewSampleaddSentences(newPost,sentence,SentenceMeaning);
         }
     }
 
-    private void addNewSample(DatabaseReference newPost, String sentence, String SentenceMeaning) {
+    private void addNewSampleaddSentences(DatabaseReference newPost, String sentence, String SentenceMeaning) {
         Dictionary dictionary = new Dictionary();
         dictionary.DictionarySet(sentence,SentenceMeaning);
         newPost.setValue(dictionary);
@@ -116,8 +116,8 @@ public class SentencesDialog extends AppCompatDialogFragment {
 
         newPost.child("date").setValue(ServerValue.TIMESTAMP);
     }
-    @Override
-    public void onAttach(Context context) {
+    /*@Override
+   public void onAttach(Context context) {
         super.onAttach(context);
 
         try {
@@ -125,10 +125,10 @@ public class SentencesDialog extends AppCompatDialogFragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()+"must implement ExampleDialogListener");
         }
-    }
+    }*/
 
 
-    public interface ExampleDialogListener{
+  /*  public interface ExampleDialogListener{
         void applyTexts(String post_key, String word);
-    }
+    }*/
 }

@@ -8,20 +8,25 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+
 import com.example.englishdic.viewHolder.dictionaryViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import com.google.firebase.database.ValueEventListener;
 
 public class Fragment2 extends Fragment  {
 
@@ -29,11 +34,11 @@ public class Fragment2 extends Fragment  {
     private static final String TAG = "anonim" ;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabaseUser;
+   // private DatabaseReference mDatabaseUser;
     private FirebaseUser mCurrentUser;
 
     private String post_key;
-    private String post_keySentence;
+  //  private String post_keySentence;
     private String post_word;
 
 
@@ -41,11 +46,12 @@ public class Fragment2 extends Fragment  {
     RecyclerView recyclerView;
     FirebaseRecyclerOptions<Dictionary> options;
     FirebaseRecyclerAdapter<Dictionary, dictionaryViewHolder> adapter;
-    TextView mTextView;
+    TextView nothing_to_show_word;
 
 
 
-    private boolean flagDecoration = false;
+ /*   private boolean flagDecoration = false;
+    private boolean showB = false;*/
 
       View a, b;
 
@@ -55,28 +61,63 @@ public class Fragment2 extends Fragment  {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
-        View root = inflater.inflate(R.layout.fragment_activity, container, false);
+        View root = inflater.inflate(R.layout.tumlesik, container, false);
 
-       /* a = root.findViewById(R.id.ActivityMain);
-        b = root.findViewById(R.id.fragment2);*/
+         a = root.findViewById(R.id.nothing_to_show);
+        b = root.findViewById(R.id.fragment2);
 
         return root;
 
     }
- /*  public void showB() {
+   public void showB() {
+        a.setVisibility(View.VISIBLE);
+        b.setVisibility(View.INVISIBLE);
+
+    }
+    public void showA() {
         a.setVisibility(View.INVISIBLE);
         b.setVisibility(View.VISIBLE);
-    }*/
+
+
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    //    showB();
+
+        nothing_to_show_word = (TextView) getView().findViewById(R.id.nothing_to_show_word);
+
         mAuth = FirebaseAuth.getInstance();
 
         if(post_key!=null){
-            Log.d(TAG, "Buraya bak");
-            showSentences();
+       //     Log.d(TAG, "Buraya bak");
+            mCurrentUser = mAuth.getCurrentUser();
+            databaseReference = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary").child(post_key).child("sentences");
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+                    //    Toast.makeText(getActivity(), " exixst", Toast.LENGTH_SHORT).show();
+                        showA();
+                        showSentences();
+                    }
+                    else{
+                     //   Toast.makeText(getActivity(), "No exixst", Toast.LENGTH_SHORT).show();
+                        showB();
+                        nothing_to_show_word.setText("No sentences to display ");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }else{
+
+            showB();
         }
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -133,8 +174,8 @@ public class Fragment2 extends Fragment  {
     }
 
     private void showSentences() {
-        mCurrentUser = mAuth.getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary").child(post_key).child("sentences");
+
+
       //  databaseReference.keepSynced(true);
         recyclerView = (RecyclerView)getView().findViewById(R.id.recyclerviewFragment2);
 
@@ -147,6 +188,10 @@ public class Fragment2 extends Fragment  {
             @Override
             protected void onBindViewHolder(@NonNull dictionaryViewHolder holder, int position, @NonNull final Dictionary model) {
                 final String post_keySentence = getRef(position).getKey();
+
+            //   Toast.makeText(getActivity(), "here we are == "+post_keySentence, Toast.LENGTH_SHORT).show();
+
+
                 holder.sentence.setText(model.getSentence());
                 holder.meaningSentence.setText(model.getMeaningSentence());
 
@@ -162,8 +207,8 @@ public class Fragment2 extends Fragment  {
                         return false;
                     }
                 });
-            }
 
+            }
             @NonNull
             @Override
             public dictionaryViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -172,21 +217,42 @@ public class Fragment2 extends Fragment  {
             }
         };
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),1);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),
-                gridLayoutManager.getOrientation());
 
-        if(!flagDecoration)//RecyclerView decorator not adding extra padding on refresh when adding this code
-        {
-            recyclerView.addItemDecoration(dividerItemDecoration);
-            flagDecoration = true;
-        }
+         //   Toast.makeText(getActivity(),"showb=false", Toast.LENGTH_SHORT).show();
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),1);
+            recyclerView.setLayoutManager(gridLayoutManager);
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),
+                    gridLayoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        /*    if(!flagDecoration)//RecyclerView decorator not adding extra padding on refresh when adding this code
+            {
+                recyclerView.addItemDecoration(dividerItemDecoration);
+                flagDecoration = true;
+            }*/
 
-        adapter.startListening();
-        recyclerView.setHasFixedSize(true);
+            adapter.startListening();
+            recyclerView.setHasFixedSize(true);
 
-        recyclerView.setAdapter(adapter);
+            recyclerView.setAdapter(adapter);
+
+
     }
 
 }
+    /*    Query query =  FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary").child(post_key).orderByChild("sentences").equalTo("sentences");
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    Toast.makeText(getActivity(), "dataSnapshot is exist", Toast.LENGTH_SHORT).show();
+                }
+                else
+                    Toast.makeText(getActivity(), "dataSnapshot not  exist", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });*/

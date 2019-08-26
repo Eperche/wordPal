@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:id="@+id/layoutListem">
-    <View
-        android:layout_width="12dp"
-        android:layout_height="65dp"
-        android:background="@color/colorSideDivider"/>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:layout_marginLeft="12dp">
+        android:layout_marginLeft="12dp"
+        android:id="@+id/sentencesBlog">
+
 
         <TextView
             android:id="@+id/SentenceField"
@@ -21,7 +20,7 @@
             android:src="@mipmap/ic_launcher"
             android:text="Word Field"
             android:textColor="#2F74AA"
-            android:textSize="14dp"
+            android:textSize="16dp"
             android:textStyle="bold"/>
 
         <TextView
@@ -34,10 +33,22 @@
             android:textStyle="italic"
             android:text="sentence meaning"
             android:textColor="#000"
-            android:textSize="12dp" />
+            android:textSize="14dp" />
 
 
 
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="12dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/sentencesBlog"
+        android:layout_alignTop="@+id/sentencesBlog"
+        android:layout_alignBottom="@+id/sentencesBlog"
+        android:layout_marginStart="-12dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@color/colorSideDivider" />
+
 
 </RelativeLayout>

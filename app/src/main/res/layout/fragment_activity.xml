@@ -12,4 +12,5 @@
         android:layout_alignParentTop="true">
 
     </androidx.recyclerview.widget.RecyclerView>
+
 </LinearLayout>
