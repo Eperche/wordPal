@@ -206,12 +206,11 @@ public class ExampleDialog extends AppCompatDialogFragment {
 
         final Intent kSpeechRecognzierIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
  //       kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-         kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE,
-                Locale.getDefault());
+       //  kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE,
+        //        Locale.getDefault());
 
 
-  ////      kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, selectedLang2.getGetName());
-        ;
+       kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, selectedLang2.getGetName());
    //   kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, selectedLang2.getGetName());
     //  kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE,selectedLang2.getGetName());
 

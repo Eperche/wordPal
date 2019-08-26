@@ -28,18 +28,20 @@
         ads:adUnitId="ca-app-pub-3940256099942544/6300978111"></com.google.android.gms.ads.AdView>
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
+
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:background="@null"
         android:id="@+id/addWord"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="false"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginBottom="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="80dp"
         android:src="@drawable/ic_add_circle_blue_48dp" />
-
 
 
 </RelativeLayout>

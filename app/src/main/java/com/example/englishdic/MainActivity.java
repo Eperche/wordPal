@@ -33,8 +33,8 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements ExampleDialog.ExampleDialogListener/*/, MainPageFragment.MainPageFragmentListener */{
     public Toolbar toolbar;
     public  TabLayout tabLayout;
-    public  ViewPager viewPager;
-    public PagerAdapter pagerAdapter;
+    public static ViewPager viewPager;
+    public static PagerAdapter pagerAdapter;
     public TabItem tabWords;
     public  TabItem tabSentences;
     private  List<Languages> languagesList = new ArrayList<>();
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements ExampleDialog.Exa
 
 
         toolbar =(Toolbar)findViewById(R.id.toolbar);
-        toolbar.setTitle("Tablayout");
+        toolbar.setTitle("My Dictionary");
         setSupportActionBar(toolbar);
 
         tabLayout =(TabLayout)findViewById(R.id.tablayout);
@@ -57,13 +57,11 @@ public class MainActivity extends AppCompatActivity implements ExampleDialog.Exa
         tabSentences=(TabItem)findViewById(R.id.sentences);
         viewPager =(ViewPager)findViewById(R.id.viewPager);
 
+    }
 
-
-
-
-
-
-
+    @Override
+    protected void onStart() {
+        super.onStart();
         pagerAdapter =new PageAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);
 
@@ -81,20 +79,20 @@ public class MainActivity extends AppCompatActivity implements ExampleDialog.Exa
                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorAccent));
                     }
                 }
-                    else if (tab.getPosition()==2){
-                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimary));
-                        if(Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP){
-                            getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorAccent));
-                        }
-
+                else if (tab.getPosition()==2){
+                    tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimary));
+                    if(Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP){
+                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorAccent));
                     }
-                    else {
 
-                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimary));
-                        if (Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP){
-                            getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorAccent));
-                        }
+                }
+                else {
+
+                    tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimary));
+                    if (Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP){
+                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorAccent));
                     }
+                }
 
 
 
@@ -134,8 +132,6 @@ public class MainActivity extends AppCompatActivity implements ExampleDialog.Exa
 
 
 
-
-
     }
 
     @Override
@@ -148,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements ExampleDialog.Exa
         if (frg != null && frg instanceof Fragment2) {
             ((Fragment2)frg).sendGetRequest(post_key,word,frg);
         }
+
       /*  Bundle bundle = new Bundle();
         bundle.putString("params", post_key);
         bundle.putString("params", word);

@@ -4,66 +4,99 @@
     android:layout_height="wrap_content"
     android:id="@+id/layoutListem">
 
+    <TextView
+        android:layout_width="12dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/sol_layout"
+        android:layout_alignBottom="@+id/sol_layout"
+        android:layout_marginBottom="0dp"
+        android:background="@color/colorSideDivider" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/sol_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_marginLeft="12dp"
-        android:id="@+id/sentencesBlog">
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="0dp"
+        android:layout_toStartOf="@+id/sagLayout"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/wordField"
+        <RelativeLayout
+            android:id="@+id/sentencesBlog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher"
-            android:text="Word Field"
-            android:textColor="#2F74AA"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:singleLine="true"/>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="12dp"
+            android:layout_toEndOf="@id/sagLayout"
+            android:layout_toRightOf="@+id/sagLayout"
+            android:padding="10dp">
 
-        <TextView
-            android:id="@+id/meaningField"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/wordField"
-            android:layout_alignStart="@+id/wordField"
-            android:layout_marginTop="2dp"
-            android:textStyle="italic"
-            android:text="word meaning"
-            android:textColor="#000"
-            android:textSize="14dp"
-            android:singleLine="true"/>
+            <TextView
+                android:id="@+id/wordField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:src="@mipmap/ic_launcher"
+                android:text="Word Field"
+                android:textColor="#2F74AA"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/getDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/wordField"
-            android:layout_marginStart="19dp"
-            android:layout_toEndOf="@+id/wordField"
-            android:text="TextView"
-            android:textSize="8dp"
-            android:textStyle="italic" />
+            <TextView
+                android:id="@+id/meaningField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wordField"
+                android:layout_alignStart="@+id/wordField"
+                android:layout_marginTop="2dp"
+                android:singleLine="false"
+                android:text="word meaning"
+                android:textColor="#000"
+                android:textSize="14dp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/getDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/wordField"
+                android:layout_marginStart="19dp"
+                android:layout_toEndOf="@+id/wordField"
+                android:text="TextView"
+                android:textSize="8dp"
+                android:textStyle="italic" />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/sagLayout"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp">
+
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btnAddSentences"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_note_add_custom_48dp"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_note_add_custom_48dp" />
 
-
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnDisplaySentences"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/btnAddSentences"
+            android:layout_marginLeft="-40dp"
+            android:background="@drawable/ic_list_custom_xdp" />
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="12dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/sentencesBlog"
-        android:layout_alignTop="@+id/sentencesBlog"
-        android:layout_alignBottom="@+id/sentencesBlog"
-        android:layout_marginStart="-12dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
-        android:background="@color/colorSideDivider" />
 </RelativeLayout>

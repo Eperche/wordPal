@@ -16,6 +16,7 @@ public class dictionaryViewHolder extends RecyclerView.ViewHolder {
     public TextView meaningSentence;
     public TextView  date;
     public ImageButton sentenceButton;
+    public ImageButton displayButton;
 
  //   RelativeLayout parentLayout;
 
@@ -29,6 +30,8 @@ public class dictionaryViewHolder extends RecyclerView.ViewHolder {
         date    = (TextView) itemView.findViewById(R.id.getDate);
 
         sentenceButton = (ImageButton) itemView.findViewById(R.id.btnAddSentences);
+        displayButton  = (ImageButton) itemView.findViewById(R.id.btnDisplaySentences);
+
        // date.setVisibility(View.INVISIBLE);
       //  parentLayout =itemView.findViewById(R.id.parent_layout);
 

@@ -7,6 +7,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -22,10 +23,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 
 import androidx.core.view.MenuItemCompat;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 
 import com.example.englishdic.viewHolder.dictionaryViewHolder;
@@ -69,6 +73,8 @@ public class MainPageFragment extends Fragment {
 
     private   List<Languages> languagesList = new ArrayList<>();
     Locale[] locales = Locale.getAvailableLocales();
+    private ViewPager mviewPager;
+    private  PagerAdapter mpagerAdapter;
     private static final String TAG = "STT" ;
     private TextToSpeech mTTS;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -80,10 +86,11 @@ public class MainPageFragment extends Fragment {
     FirebaseRecyclerOptions <Dictionary> options;
     FirebaseRecyclerAdapter<Dictionary,dictionaryViewHolder> adapter;
     CircleImageView addImage;
+    ImageButton  addImage1;
     private AdView mAdView;
     ExampleDialog exampleDialog = new ExampleDialog();
 
-
+    private ExampleDialog.ExampleDialogListener listener;
 
 
     private boolean flagDecoration = false;
@@ -114,36 +121,7 @@ public class MainPageFragment extends Fragment {
      //   FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mAuth = FirebaseAuth.getInstance();
 
-        mTTS = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS){
 
-                    Log.i("STT", "getLanguages() was called");
-
-                    int x = 0;
-                    int y = 0;
-
-                    for(Locale l:locales)
-                    {
-                        int res = mTTS.isLanguageAvailable(l);
-                        if(res == TextToSpeech.LANG_COUNTRY_AVAILABLE){
-                            Languages languages = new Languages(l.getDisplayName(),l.getLanguage());
-                            //   Toast.makeText(getActivity(), l.getDisplayName(), Toast.LENGTH_SHORT).show();
-                            languagesList.add(languages);
-            /*    hashSet.add(l);
-                listem.add(l.getLanguage());*/
-
-                        }
-                    }
-               //     Log.d("STT", "MainPageFrag-size: "+languagesList.size());
-                    //mainPageFragmentlistener.applyList(languagesList);
-
-
-                }
-              
-            }
-        });
 
         MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
             @Override
@@ -180,11 +158,44 @@ public class MainPageFragment extends Fragment {
 
 
         };
-        addImage = (CircleImageView) getView().findViewById(R.id.addWord);
-        addImage.setOnClickListener(new View.OnClickListener() {
+        //addImage1 = (CircleImageView) getView().findViewById(R.id.addWord);
+        addImage1 = (ImageButton) getView().findViewById(R.id.addWord);
+        addImage1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openDialog();
+            }
+
+
+        });
+        mTTS = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS){
+
+                    Log.i("STT", "getLanguages() was called");
+
+                    int x = 0;
+                    int y = 0;
+
+                    for(Locale l:locales)
+                    {
+                        int res = mTTS.isLanguageAvailable(l);
+                        if(res == TextToSpeech.LANG_COUNTRY_AVAILABLE){
+                            Languages languages = new Languages(l.getDisplayName(),l.getLanguage());
+                            //   Toast.makeText(getActivity(), l.getDisplayName(), Toast.LENGTH_SHORT).show();
+                            languagesList.add(languages);
+            /*    hashSet.add(l);
+                listem.add(l.getLanguage());*/
+
+                        }
+                    }
+                    //     Log.d("STT", "MainPageFrag-size: "+languagesList.size());
+                    //mainPageFragmentlistener.applyList(languagesList);
+
+
+                }
+
             }
         });
     }
@@ -225,6 +236,23 @@ public class MainPageFragment extends Fragment {
                     public void onClick(View v) {
                         openSentencesDialog(post_key,model.getWord());
                    //     Log.d(TAG, post_key+" :Postkeysuccess");
+                    }
+                });
+                holder.displayButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                MainActivity mainActivity =new MainActivity();
+                       mviewPager = mainActivity.viewPager;
+                       mpagerAdapter =mainActivity.pagerAdapter;
+                   //     mviewPager.setAdapter(mpagerAdapter);
+                        Fragment frg = null;
+                        frg = ((PageAdapter)mviewPager.getAdapter()).getFragment(1);
+
+
+                        if (frg != null && frg instanceof Fragment2) {
+                            ((Fragment2)frg).sendGetRequest(post_key,model.getWord(),frg);
+                        }
+                        mviewPager.setCurrentItem(1);
                     }
                 });
 

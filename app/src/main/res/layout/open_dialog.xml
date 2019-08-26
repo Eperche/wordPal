@@ -62,8 +62,8 @@
         android:layout_marginBottom="5dp"
         android:layout_toEndOf="@+id/edit_meaning"
         android:background="@null"
-
-        app:srcCompat="@drawable/ic_mic_black_24dp" />
+        app:srcCompat="@drawable/ic_mic_black_24dp"
+        tools:ignore="VectorDrawableCompat" />
 
   <!--  <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/btnAddSentences"
