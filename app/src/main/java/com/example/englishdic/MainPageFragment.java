@@ -168,10 +168,13 @@ public class MainPageFragment extends Fragment {
                             if(dataSnapshot.exists()){
                                 //    Toast.makeText(getActivity(), " exixst", Toast.LENGTH_SHORT).show();
                                 mTextView.setVisibility(View.INVISIBLE);
+
                             }
                             else{
                                 //   Toast.makeText(getActivity(), "No exixst", Toast.LENGTH_SHORT).show();
                                 mTextView.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.INVISIBLE);
+
                             }
                         }
 
@@ -340,7 +343,7 @@ public class MainPageFragment extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 progressBar.setVisibility(View.INVISIBLE);
-                recyclerView.setAdapter(adapter);
+
             }
 
             @Override
@@ -351,7 +354,7 @@ public class MainPageFragment extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
