@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:text="Select a word to list"
-        android:textColor="#99E0CEC7"
+        android:textColor="#99C7D0E0"
         android:textSize="25dp"
         android:layout_marginBottom="70dp"/>
 

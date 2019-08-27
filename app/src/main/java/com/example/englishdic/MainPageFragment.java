@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -84,6 +85,7 @@ public class MainPageFragment extends Fragment {
     FirebaseRecyclerOptions <Dictionary> options;
     FirebaseRecyclerAdapter<Dictionary,dictionaryViewHolder> adapter;
     CircleImageView addImage;
+    TextView mTextView;
     ImageButton  addImage1;
     private AdView mAdView;
     ExampleDialog exampleDialog = new ExampleDialog();
@@ -119,6 +121,8 @@ public class MainPageFragment extends Fragment {
      //   FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mAuth = FirebaseAuth.getInstance();
 
+        mTextView = (TextView)getView().findViewById(R.id.no_word);
+        mTextView.setVisibility(View.INVISIBLE);
 
 
         MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
@@ -149,7 +153,27 @@ public class MainPageFragment extends Fragment {
                     mCurrentUser = mAuth.getCurrentUser();
                     databaseReference = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
                     databaseReference.keepSynced(true);
+                    DatabaseReference no_word =FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
+
                     showDictionary();
+                    no_word.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()){
+                                //    Toast.makeText(getActivity(), " exixst", Toast.LENGTH_SHORT).show();
+                                mTextView.setVisibility(View.INVISIBLE);
+                            }
+                            else{
+                                //   Toast.makeText(getActivity(), "No exixst", Toast.LENGTH_SHORT).show();
+                                mTextView.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                     addImage1.setVisibility(View.VISIBLE);
                     //checkUserExist();
                 }
@@ -157,6 +181,7 @@ public class MainPageFragment extends Fragment {
 
 
         };
+
         //addImage1 = (CircleImageView) getView().findViewById(R.id.addWord);
         addImage1 = (ImageButton) getView().findViewById(R.id.addWord);
         addImage1.setVisibility(View.INVISIBLE);

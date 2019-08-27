@@ -16,7 +16,18 @@
         android:layout_above="@+id/adView"
         >
 
+
     </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/no_word"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#99C7D0E0"
+        android:textSize="25dp"
+        android:layout_centerInParent="true"
+        android:text="Add a new word" />
+
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"
