@@ -438,7 +438,7 @@ public class MainPageFragment extends Fragment {
 
     private void signInAnonymously() {
         mAuth.signInAnonymously()
-                .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
