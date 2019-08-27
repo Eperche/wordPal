@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ import com.google.firebase.auth.AuthResult;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -92,6 +94,8 @@ public class MainPageFragment extends Fragment {
 
     private ExampleDialog.ExampleDialogListener listener;
 
+    ProgressBar progressBar;
+
 
     private boolean flagDecoration = false;
  //   View a, b;
@@ -124,6 +128,8 @@ public class MainPageFragment extends Fragment {
         mTextView = (TextView)getView().findViewById(R.id.no_word);
         mTextView.setVisibility(View.INVISIBLE);
 
+        progressBar= (ProgressBar)getView().findViewById(R.id.progrresbarr);
+        progressBar.setVisibility(View.VISIBLE);
 
         MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
             @Override
@@ -328,6 +334,37 @@ public class MainPageFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setAdapter(adapter);
+
+
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                progressBar.setVisibility(View.INVISIBLE);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                progressBar.setVisibility(View.INVISIBLE);
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
 
 

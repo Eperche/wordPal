@@ -19,6 +19,14 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
+    <ProgressBar
+        android:id="@+id/progrresbarr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbarStyle="insideOverlay">
+
+    </ProgressBar>
+
     <TextView
         android:id="@+id/no_word"
         android:layout_width="wrap_content"
@@ -36,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-3940256099942544/6300978111"></com.google.android.gms.ads.AdView>
+        ads:adUnitId="ca-app-pub-1892555451847992/3081632796"></com.google.android.gms.ads.AdView>
 
 
 
