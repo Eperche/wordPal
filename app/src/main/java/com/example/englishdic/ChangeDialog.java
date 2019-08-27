@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -140,7 +139,7 @@ public class    ChangeDialog extends AppCompatDialogFragment {
                         if(!TextUtils.isEmpty(word))
                         saveDictionary();
                         else{
-                            Toast.makeText(getActivity(), post_keySentence, Toast.LENGTH_SHORT).show();
+                   //         Toast.makeText(getActivity(), post_keySentence, Toast.LENGTH_SHORT).show();
                            saveSentece();
                         }
                     }

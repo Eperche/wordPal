@@ -6,8 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
-import android.content.Context;
-import android.media.Image;
+
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.speech.tts.TextToSpeech;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -152,6 +150,7 @@ public class MainPageFragment extends Fragment {
                     databaseReference = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
                     databaseReference.keepSynced(true);
                     showDictionary();
+                    addImage1.setVisibility(View.VISIBLE);
                     //checkUserExist();
                 }
             }
@@ -160,11 +159,14 @@ public class MainPageFragment extends Fragment {
         };
         //addImage1 = (CircleImageView) getView().findViewById(R.id.addWord);
         addImage1 = (ImageButton) getView().findViewById(R.id.addWord);
+        addImage1.setVisibility(View.INVISIBLE);
         addImage1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openDialog();
             }
+
+
 
 
         });
@@ -198,6 +200,7 @@ public class MainPageFragment extends Fragment {
 
             }
         });
+
     }
 
     private void showDictionary() {
@@ -438,8 +441,8 @@ public class MainPageFragment extends Fragment {
 
     private void firebaseSearch(String searchText){
 
-        String query= searchText;
-        Query irebaseSearcQuery=databaseReference.orderByChild("word").startAt(query).endAt(query+"\uf8fff");
+        String query= searchText.toLowerCase();
+        Query irebaseSearcQuery=databaseReference.orderByChild("word").startAt(query).endAt(query+"\uf8ff");
         options =new FirebaseRecyclerOptions.Builder<Dictionary>().setQuery(irebaseSearcQuery,Dictionary.class).build();
 
         adapter = new FirebaseRecyclerAdapter<Dictionary, dictionaryViewHolder>(options) {

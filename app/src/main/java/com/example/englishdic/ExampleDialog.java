@@ -14,8 +14,7 @@ import android.speech.tts.TextToSpeech;
 import androidx.annotation.NonNull;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -29,7 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -498,8 +497,8 @@ public class ExampleDialog extends AppCompatDialogFragment {
 
 
     private void addDictionary() {
-         String word = editTextWord.getText().toString().trim();
-         String meaning = editTextMeaning.getText().toString().trim();
+         String word = editTextWord.getText().toString().trim().toLowerCase();
+         String meaning = editTextMeaning.getText().toString().trim().toLowerCase();
 
          if(!TextUtils.isEmpty(word) && !TextUtils.isEmpty(meaning)){
              final DatabaseReference newPost = mDatabase.push();

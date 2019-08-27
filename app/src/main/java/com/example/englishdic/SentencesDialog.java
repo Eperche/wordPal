@@ -1,28 +1,4 @@
-package com.example.englishdic;
-
-import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatDialogFragment;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
-
-import java.util.HashMap;
-import java.util.Map;
-
+ /*
 public class SentencesDialog extends AppCompatDialogFragment {
 
     private FirebaseUser mCurrentUser;
@@ -131,4 +107,4 @@ public class SentencesDialog extends AppCompatDialogFragment {
   /*  public interface ExampleDialogListener{
         void applyTexts(String post_key, String word);
     }*/
-}
+//}
