@@ -5,7 +5,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion "29.0.0"
     defaultConfig {
-        applicationId "com.example.englishdic"
+        applicationId "com.powerbros.yourdictionary"
         minSdkVersion 17
         targetSdkVersion 28
         versionCode 1
@@ -28,9 +28,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.firebase:firebase-auth:17.0.0'
     implementation 'com.firebaseui:firebase-ui-database:4.3.0'
-    testİmplementation 'junit:junit:4.12'
-    androidTestİmplementation 'androidx.test:runner:1.1.0'
-    androidTestİmplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.google.android.gms:play-services-ads:18.1.1'

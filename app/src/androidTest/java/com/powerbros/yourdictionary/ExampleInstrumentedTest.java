@@ -1,4 +1,4 @@
-package com.example.englishdic;
+package com.powerbros.yourdictionary;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;

@@ -1,6 +1,8 @@
-package com.example.englishdic;
+package com.powerbros.yourdictionary;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,11 +10,18 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
+
+import androidx.annotation.NonNull;
+
+import androidx.appcompat.app.AppCompatDialogFragment;
+
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -20,9 +29,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatDialogFragment;
+
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,19 +37,23 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import java.util.ArrayList;
 import java.util.Locale;
 
 
-public class    ChangeDialog extends AppCompatDialogFragment {
+public class ExampleDialog extends AppCompatDialogFragment {
     private static final String TAG = "STT" ;
     private DatabaseReference mDatabase;
-    private DatabaseReference rootDatabase;
-    private DatabaseReference databaseReference;
+    private DatabaseReference mDatabaseSentences;
     private DatabaseReference mDatabaseUser;
+    private DatabaseReference databaseReference;
     private FirebaseUser mCurrentUser;
     private FirebaseAuth mAuth;
     private EditText editTextWord;
@@ -50,101 +61,101 @@ public class    ChangeDialog extends AppCompatDialogFragment {
     private ImageButton imageButtonEdit;
     private ImageButton imageButtonMeaning;
 
-    private String word;
-    private String equivalent;
+    private ExampleDialogListener listener;
     private String post_key;
-    private String post_keySentence;
-    private String sentence;
-    private String sentenceEquivalent;
+    private String word;
 
+    public void setWord(String word) {
+        this.word = word;
 
-    Spinner spinner;
-    Spinner spinner1;
-    private TextToSpeech mTTS;
-
-    Locale[] locales = Locale.getAvailableLocales();
-    ArrayAdapter<Languages> Ladapter;
-    //   private String selectedLanguage;
-    private Languages selectedLang;
-    private Languages selectedLang2;
-    private int defaultPosition;
-    private boolean addPosition = false;
-    private boolean addPosition1 = false;
-
-    public void setPost_keySentence(String post_keySentence) {
-        this.post_keySentence = post_keySentence;
-    }
-
-    public void setSentence(String sentence) {
-        this.sentence = sentence;
-    }
-
-    public void setSentenceEquivalent(String sentenceEquivalent) {
-        this.sentenceEquivalent = sentenceEquivalent;
     }
 
     public void setPost_key(String post_key) {
         this.post_key = post_key;
     }
+    Spinner spinner;
+    Spinner spinner1;
 
-    public void setWord(String word) {
-        this.word = word;
-    }
+ //   int sum = 0;
 
-    public void setEquivalent(String equivalent) {
-        this.equivalent = equivalent;
-    }
+    private TextToSpeech mTTS;
 
+    Locale[] locales = Locale.getAvailableLocales();
+
+/*    Locale loc;
+    List<Locale> localeList = new ArrayList<Locale>();
+    List<String> country = new ArrayList<String>();*/
+
+    // * - Move these two variables out here
+    /*ArrayAdapter<Locale> aa;
+    ArrayAdapter<String> bb;*/
+    ArrayAdapter<Languages> Ladapter;
+ //   private String selectedLanguage;
+
+    private Languages selectedLang;
+    private Languages selectedLang2;
+    private int defaultPosition;
+    private int selectedPosition;
+    private boolean addPosition = false;
+    private boolean addPosition1 = false;
+    public   List<Languages> languagesList = new ArrayList<>();
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         addPosition = false;
         addPosition1 = false;
 
+
+
         mAuth = FirebaseAuth.getInstance();
 
       //  makePermanet();
-        rootDatabase =  FirebaseDatabase.getInstance().getReference();
         mCurrentUser =mAuth.getCurrentUser();
-        mDatabaseUser = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid());
+        mDatabaseUser = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
         mDatabase = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
-
 
         mDatabase.keepSynced(true);
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         View view = inflater.inflate(R.layout.open_dialog,null);
+        if(!TextUtils.isEmpty(word))
+        builder.setView(view).setTitle("Create a sentence about "+ word);
+        else
+        builder.setView(view).setTitle("Add");
 
-        builder.setView(view)
-                .setTitle("Change")
-                .setNegativeButton("delete", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(!TextUtils.isEmpty(word)){
-                            DatabaseReference deleteWord = mDatabase.child(post_key);//post_key=sözcük keyi
-                            deleteWord.removeValue();
+
+                            mDatabaseSentences = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary").child(post_key).child("sentences");
+                            addSentences();
                         }
-                        else{
-                            DatabaseReference deleteSentence = mDatabase.child(post_key).child("sentences").child(post_keySentence);//post_key=sözcük keyi
-                            deleteSentence.removeValue();
-                        }
+                        else
+                        addDictionary();
                     }
-                })
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                }) ;
+        if(!TextUtils.isEmpty(word)){
+                builder.setNeutralButton("Sentences", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(!TextUtils.isEmpty(word))
-                        saveDictionary();
-                        else{
-                   //         Toast.makeText(getActivity(), post_keySentence, Toast.LENGTH_SHORT).show();
-                           saveSentece();
-                        }
+                        listener.applyTexts(post_key,word);
+
                     }
                 });
-        mTTS = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
+        }
+         mTTS = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
                 if (i == TextToSpeech.SUCCESS) {
@@ -161,24 +172,30 @@ public class    ChangeDialog extends AppCompatDialogFragment {
 
         spinner1 =  view.findViewById(R.id.spinner1);
         setLanguagePrefence();
+        // ArrayAdapter arrayAdapter =  ArrayAdapter.createFromResource(getActivity(),R.array.languages,R.layout.support_simple_spinner_dropdown_item);
+     //   spinner.setAdapter(arrayAdapter);
+     //   spinner.setOnItemSelectedListener(this);
+     /*   spinner1.setAdapter(arrayAdapter);
 
+        spinner1.setOnItemSelectedListener(this);*/
 
         editTextWord = view.findViewById(R.id.edit_word);
         editTextMeaning = view.findViewById(R.id.edit_meaning);
         imageButtonEdit = view.findViewById(R.id.img_button_edit);
         imageButtonMeaning=view.findViewById(R.id.img_button_meaning);
-
         if(!TextUtils.isEmpty(word)){
-            editTextWord.setText(word);
-            editTextMeaning.setText(equivalent);
+            editTextWord.setHint("Enter your sentence");
+            editTextMeaning.setHint("Enter the meaning of sentence");
         }
-        else {
-            editTextWord.setText(sentence);
-            editTextMeaning.setText(sentenceEquivalent);
+      /*  LinkedHashSet<String> hashSet = new LinkedHashSet<String>();
+        Locale[] locales = Locale.getAvailableLocales();
+        for(Locale l:locales)
+        {
+            hashSet.add(l.getDisplayLanguage());
         }
+*/
 
 
-        //set mic
 
         return builder.create();
     }
@@ -187,14 +204,14 @@ public class    ChangeDialog extends AppCompatDialogFragment {
         final SpeechRecognizer kSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext());
 
         final Intent kSpeechRecognzierIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        //       kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        //    kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE,
-        //           Locale.getDefault());
+ //       kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+       //  kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE,
+        //        Locale.getDefault());
 
 
-        kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, selectedLang2.getGetName());
-        //   kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, selectedLang2.getGetName());
-        //  kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE,selectedLang2.getGetName());
+       kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, selectedLang2.getGetName());
+   //   kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, selectedLang2.getGetName());
+    //  kSpeechRecognzierIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE,selectedLang2.getGetName());
 
         kSpeechRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
@@ -278,16 +295,16 @@ public class    ChangeDialog extends AppCompatDialogFragment {
 
         final Intent mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
-        //   mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+  //   mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
       /*  mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE,
                 "en-US");*/
-        //    String languagePref = loc.toString();//or, whatever iso code...
+    //    String languagePref = loc.toString();//or, whatever iso code...
 
 
-        //  Log.d(TAG, "TextToSpeech ===="+ selectedLang.getGetName());
+      //  Log.d(TAG, "TextToSpeech ===="+ selectedLang.getGetName());
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, selectedLang.getGetName());
-        //    mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, selectedLang.getGetName());
-        //   mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, selectedLang.getGetName());
+    //    mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, selectedLang.getGetName());
+     //   mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, selectedLang.getGetName());
 
 
 
@@ -372,6 +389,7 @@ public class    ChangeDialog extends AppCompatDialogFragment {
 
 
     }
+
     private void startWhenTTSIsInitialized() {
         Log.i("STT", "startWhenTTSIsInitialized() was called");
 
@@ -396,32 +414,34 @@ public class    ChangeDialog extends AppCompatDialogFragment {
         }*/
       /*  LinkedHashSet<Locale> hashSet = new LinkedHashSet<Locale>();
         LinkedHashSet<String> listem = new LinkedHashSet<String>();*/
-
-        List<Languages> languagesList = new ArrayList<>();
+       // List<Languages> languagesList = new ArrayList<>();
+    /*
         int x = 0;
+        int y = 0;
 
         for(Locale l:locales)
         {
-
             int res = mTTS.isLanguageAvailable(l);
             if(res == TextToSpeech.LANG_COUNTRY_AVAILABLE){
                 Languages languages = new Languages(l.getDisplayName(),l.getLanguage());
 
                 languagesList.add(languages);
-            /*    hashSet.add(l);
-                listem.add(l.getLanguage());*/
-                if(l.getLanguage()==Locale.getDefault().getLanguage()){
+            //    hashSet.add(l);
+          //      listem.add(l.getLanguage());
+                if(l.getLanguage().equals(Locale.getDefault().getLanguage())){
                     defaultPosition=x;
-                    //      Toast.makeText(getActivity(), "Default: "+defaultPosition, Toast.LENGTH_SHORT).show();
-
+              //      Toast.makeText(getActivity(), "Default: "+defaultPosition, Toast.LENGTH_SHORT).show();
                 }
+                if(l.getLanguage().equals(Locale.ENGLISH.getLanguage())){
+                    selectedPosition=y;
+                }
+                y++;
                 x++;
-
             }
+        }*/
 
-        }
-
-        Ladapter = new ArrayAdapter<Languages>(getActivity(), android.R.layout.simple_spinner_item,languagesList){
+    //    Log.d(TAG, "Ladapter list size ===> "+languagesList.size());
+       Ladapter = new ArrayAdapter<Languages>(getActivity(), android.R.layout.simple_spinner_item,languagesList){
     /*        @Override
             public View getDropDownView(int position, View convertView, ViewGroup parent)
             {
@@ -441,10 +461,9 @@ public class    ChangeDialog extends AppCompatDialogFragment {
 
                 return v;
             }*/
-        };
+      };
 
         Ladapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
 
         spinner1.setAdapter(Ladapter);
         spinner.setAdapter(Ladapter);
@@ -464,8 +483,8 @@ public class    ChangeDialog extends AppCompatDialogFragment {
 
         //Creating the ArrayAdapter instance having the country list
         // * - now it's safe to set the adapter because the country list has been populated
-        // aa = new ArrayAdapter<Locale>(getActivity(), android.R.layout.simple_spinner_item,list);
-        //  aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+       // aa = new ArrayAdapter<Locale>(getActivity(), android.R.layout.simple_spinner_item,list);
+      //  aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
 
 
@@ -476,57 +495,30 @@ public class    ChangeDialog extends AppCompatDialogFragment {
         spinner.setOnItemSelectedListener(this);*/
     }
 
-    private void saveSentece() {
-        String wordx = editTextWord.getText().toString().trim();
-        String meaning = editTextMeaning.getText().toString().trim();
 
+    private void addDictionary() {
+         String word = editTextWord.getText().toString().trim().toLowerCase();
+         String meaning = editTextMeaning.getText().toString().trim().toLowerCase();
 
-        if(!TextUtils.isEmpty(wordx) && !TextUtils.isEmpty(meaning)){
-            //   final DatabaseReference newPost = mDatabase.push();
-            DatabaseReference saveDictionary = mDatabase.child(post_key).child("sentences").child(post_keySentence);//post_key=sözcük keyi
-            addNewSampleSentences(saveDictionary,wordx,meaning);
-        }
-    }
-    private void addNewSampleSentences(DatabaseReference saveDictionary,String word, String meaning) {
-
-        saveDictionary.child("meaningSentence").setValue(meaning);
-        saveDictionary.child("sentence").setValue(word);
-
-      /*     Map map = new HashMap();
-            map.put("timestamp", ServerValue.TIMESTAMP);*/
-        //newPost.child("data").updateChildren(map);
-        //     saveDictionary.child("date").setValue(ServerValue.TIMESTAMP);
-        mDatabase.keepSynced(true);
-        saveDictionary.keepSynced(true);
-
-    }
-
-    private void saveDictionary() {
-
-         String wordx = editTextWord.getText().toString().trim();
-         String meaning = editTextMeaning.getText().toString().trim();
-
-
-         if(!TextUtils.isEmpty(wordx) && !TextUtils.isEmpty(meaning)){
-          //   final DatabaseReference newPost = mDatabase.push();
-             DatabaseReference saveDictionary = mDatabase.child(post_key);//post_key=sözcük keyi
-             addNewSample(saveDictionary,wordx,meaning);
+         if(!TextUtils.isEmpty(word) && !TextUtils.isEmpty(meaning)){
+             final DatabaseReference newPost = mDatabase.push();
+             addNewSample(newPost,word,meaning);
          }
     }
 
-    private void addNewSample(DatabaseReference saveDictionary,String word, String meaning) {
 
-         saveDictionary.child("meaning").setValue(meaning);
-         saveDictionary.child("word").setValue(word);
-
-      /*     Map map = new HashMap();
-            map.put("timestamp", ServerValue.TIMESTAMP);*/
+    private void addNewSample(DatabaseReference newPost,String word, String meaning) {
+            Dictionary dictionary = new Dictionary(word,meaning);
+            newPost.setValue(dictionary);
+            Map map = new HashMap();
+            map.put("timestamp", ServerValue.TIMESTAMP);
             //newPost.child("data").updateChildren(map);
-      //     saveDictionary.child("date").setValue(ServerValue.TIMESTAMP);
+            newPost.child("date").setValue(ServerValue.TIMESTAMP);
             mDatabase.keepSynced(true);
-            saveDictionary.keepSynced(true);
+            newPost.keepSynced(true);
 
     }
+
     private  void addLanguagePreference(int position) {
         final DatabaseReference prefence  = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("LanguagePrefence");
         prefence.child("positon").setValue(position);
@@ -538,17 +530,17 @@ public class    ChangeDialog extends AppCompatDialogFragment {
     }
     private void setLanguagePrefence(){
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("LanguagePrefence").child("positon");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference myref = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("LanguagePrefence").child("positon");
+        myref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     int deger =Integer.parseInt(dataSnapshot.getValue().toString());
                     spinner.setSelection(deger);
                 }
-                else{
-
-                }
+            /*    else{
+                    spinner.setSelection(selectedPosition);
+                }*/
             }
 
             @Override
@@ -580,17 +572,17 @@ public class    ChangeDialog extends AppCompatDialogFragment {
             }
         });
 
-        DatabaseReference myref =  FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("LanguagePrefence").child("positon1");
-        myref.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference myref1 =  FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("LanguagePrefence").child("positon1");
+        myref1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     int deger =Integer.parseInt(dataSnapshot.getValue().toString());
                     spinner1.setSelection(deger);
                 }
-                else{
+        /*        else{
                     spinner1.setSelection(defaultPosition);
-                }
+                }*/
             }
 
             @Override
@@ -622,5 +614,49 @@ public class    ChangeDialog extends AppCompatDialogFragment {
             }
         });
     }
+    private void addSentences() {
+        String sentence = editTextWord.getText().toString().trim();
+        String SentenceMeaning = editTextMeaning.getText().toString().trim();
+
+        if(!TextUtils.isEmpty(sentence) && !TextUtils.isEmpty(SentenceMeaning)){
+            final DatabaseReference newPost = mDatabaseSentences.push();
+            addNewSampleaddSentences(newPost,sentence,SentenceMeaning);
+        }
+    }
+
+    private void addNewSampleaddSentences(DatabaseReference newPost, String sentence, String SentenceMeaning) {
+        Dictionary dictionary = new Dictionary();
+        dictionary.DictionarySet(sentence,SentenceMeaning);
+        newPost.setValue(dictionary);
+        Map map = new HashMap();
+        map.put("timestamp", ServerValue.TIMESTAMP);
+
+        newPost.child("date").setValue(ServerValue.TIMESTAMP);
+    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            listener =(ExampleDialogListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()+"must implement ExampleDialogListener");
+        }
+    }
+
+
+
+
+    public interface ExampleDialogListener{
+        void applyTexts(String post_key, String word);
+    }
+
+     /*   public void   sendGetRequestLanguage(List<Languages> mlist){
+
+        this.languagesList=mlist;
+
+            Log.i("STT","ExampleDialog applyList size :"+languagesList.size());
+
+    }*/
 
 }

@@ -1,4 +1,4 @@
-package com.example.englishdic;
+package com.powerbros.yourdictionary;
 
 
 import androidx.annotation.NonNull;
@@ -32,7 +32,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 
-import com.example.englishdic.viewHolder.dictionaryViewHolder;
+import com.powerbros.yourdictionary.viewHolder.dictionaryViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.ads.AdRequest;
@@ -139,7 +139,7 @@ public class MainPageFragment extends Fragment {
         });
 
         mAdView = getView().findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("47900e12c2797100").build();
+        AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
 

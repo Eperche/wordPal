@@ -1,4 +1,4 @@
-package com.example.englishdic;
+package com.powerbros.yourdictionary;
 
 import androidx.annotation.NonNull;
 

@@ -1,4 +1,4 @@
-package com.example.englishdic;
+package com.powerbros.yourdictionary;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -13,11 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
-import com.example.englishdic.viewHolder.dictionaryViewHolder;
+import com.powerbros.yourdictionary.viewHolder.dictionaryViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.ads.AdRequest;

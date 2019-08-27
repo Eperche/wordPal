@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EnglishDic</string>
+    <string name="app_name">Your Dictionary</string>
 
     <string-array name="languages">
         <item>English,en</item>

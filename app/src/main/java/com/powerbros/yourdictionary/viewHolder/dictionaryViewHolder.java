@@ -1,4 +1,4 @@
-package com.example.englishdic.viewHolder;
+package com.powerbros.yourdictionary.viewHolder;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.englishdic.R;
+import com.powerbros.yourdictionary.R;
 
 public class dictionaryViewHolder extends RecyclerView.ViewHolder {
     public View mView;
