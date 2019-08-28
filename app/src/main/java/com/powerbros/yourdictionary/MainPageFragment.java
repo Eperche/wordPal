@@ -11,6 +11,7 @@ import android.os.Bundle;
 
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.speech.tts.TextToSpeech;
@@ -242,12 +243,17 @@ public class MainPageFragment extends Fragment {
         recyclerView = (RecyclerView)getView().findViewById(R.id.recyclerview);
         mCurrentUser = mAuth.getCurrentUser();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
+      databaseReference = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
 
-        options = new FirebaseRecyclerOptions.Builder<Dictionary>()
+
+        /*   Query firebaseSearcQuery=databaseReference.orderByKey();
+        options =new FirebaseRecyclerOptions.Builder<Dictionary>().setQuery(firebaseSearcQuery,Dictionary.class).build();*/
+
+      options = new FirebaseRecyclerOptions.Builder<Dictionary>()
                 .setQuery(databaseReference,Dictionary.class).build();
 
         adapter = new FirebaseRecyclerAdapter<Dictionary, dictionaryViewHolder>(options) {
+
             @Override
             protected void onBindViewHolder(@NonNull final dictionaryViewHolder holder, int position, @NonNull final Dictionary model) {
                 final String post_key = getRef(position).getKey();
@@ -313,7 +319,6 @@ public class MainPageFragment extends Fragment {
             }
 
 
-
             @NonNull
             @Override
             public dictionaryViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -323,9 +328,12 @@ public class MainPageFragment extends Fragment {
         };
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),1);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
+        linearLayoutManager.setReverseLayout(true);
+       linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),
-                gridLayoutManager.getOrientation());
+                linearLayoutManager.getOrientation());
 
         if(!flagDecoration)//RecyclerView decorator not adding extra padding on refresh when adding this code
         {
@@ -438,7 +446,7 @@ public class MainPageFragment extends Fragment {
 
     private void signInAnonymously() {
         mAuth.signInAnonymously()
-                .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
