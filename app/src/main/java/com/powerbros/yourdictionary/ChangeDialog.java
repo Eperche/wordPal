@@ -9,7 +9,6 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -148,7 +147,7 @@ public class    ChangeDialog extends AppCompatDialogFragment {
             @Override
             public void onInit(int i) {
                 if (i == TextToSpeech.SUCCESS) {
-                    Log.d(TAG, "TextToSpeech.SUCCESS");
+              //      Log.d(TAG, "TextToSpeech.SUCCESS");
                     // * - delay important tasks until TTS is initialized
                     startWhenTTSIsInitialized();
 
@@ -373,7 +372,7 @@ public class    ChangeDialog extends AppCompatDialogFragment {
 
     }
     private void startWhenTTSIsInitialized() {
-        Log.i("STT", "startWhenTTSIsInitialized() was called");
+     //   Log.i("STT", "startWhenTTSIsInitialized() was called");
 
 
      /*   for (Locale locale : locales) {
@@ -496,7 +495,7 @@ public class    ChangeDialog extends AppCompatDialogFragment {
             map.put("timestamp", ServerValue.TIMESTAMP);*/
         //newPost.child("data").updateChildren(map);
         //     saveDictionary.child("date").setValue(ServerValue.TIMESTAMP);
-        mDatabase.keepSynced(true);
+   //     mDatabase.keepSynced(true);
         saveDictionary.keepSynced(true);
 
     }
@@ -523,7 +522,7 @@ public class    ChangeDialog extends AppCompatDialogFragment {
             map.put("timestamp", ServerValue.TIMESTAMP);*/
             //newPost.child("data").updateChildren(map);
       //     saveDictionary.child("date").setValue(ServerValue.TIMESTAMP);
-            mDatabase.keepSynced(true);
+         //   mDatabase.keepSynced(true);
             saveDictionary.keepSynced(true);
 
     }

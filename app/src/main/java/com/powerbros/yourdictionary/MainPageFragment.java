@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.speech.tts.TextToSpeech;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -151,11 +150,11 @@ public class MainPageFragment extends Fragment {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser() == null){
-                    Log.d(TAG, "getCurrentUser() == null)");
+              //      Log.d(TAG, "getCurrentUser() == null)");
                     signInAnonymously();
                 }
                 else{
-                    Log.d(TAG, "getCurrentUser() not null)");
+             //       Log.d(TAG, "getCurrentUser() not null)");
                     final String user_id = mAuth.getCurrentUser().getUid();
                     mCurrentUser = mAuth.getCurrentUser();
                     databaseReference = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
@@ -210,7 +209,7 @@ public class MainPageFragment extends Fragment {
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS){
 
-                    Log.i("STT", "getLanguages() was called");
+              //      Log.i("STT", "getLanguages() was called");
 
                     int x = 0;
                     int y = 0;
@@ -239,7 +238,7 @@ public class MainPageFragment extends Fragment {
     }
 
     private void showDictionary() {
-        Log.d(TAG, "showDictionary:success");
+   //     Log.d(TAG, "showDictionary:success");
         recyclerView = (RecyclerView)getView().findViewById(R.id.recyclerview);
         mCurrentUser = mAuth.getCurrentUser();
 
@@ -462,7 +461,7 @@ public class MainPageFragment extends Fragment {
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInAnonymously:failure", task.getException());
+                   //         Log.w(TAG, "signInAnonymously:failure", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
 

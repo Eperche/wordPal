@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,11 +143,11 @@ public class Fragment2 extends Fragment  {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser() == null){
-                    Log.d(TAG, "getCurrentUser() == null)");
+                    //Log.d(TAG, "getCurrentUser() == null)");
                  //   signInAnonymously();
                 }
                 else{
-                    Log.d(TAG, "getCurrentUser() not null)");
+                //    Log.d(TAG, "getCurrentUser() not null)");
                     final String user_id = mAuth.getCurrentUser().getUid();
                     mCurrentUser = mAuth.getCurrentUser();
 

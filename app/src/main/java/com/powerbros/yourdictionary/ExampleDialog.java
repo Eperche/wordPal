@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -159,7 +158,7 @@ public class ExampleDialog extends AppCompatDialogFragment {
             @Override
             public void onInit(int i) {
                 if (i == TextToSpeech.SUCCESS) {
-                    Log.d(TAG, "TextToSpeech.SUCCESS");
+               //     Log.d(TAG, "TextToSpeech.SUCCESS");
                     // * - delay important tasks until TTS is initialized
                     startWhenTTSIsInitialized();
 
@@ -391,7 +390,7 @@ public class ExampleDialog extends AppCompatDialogFragment {
     }
 
     private void startWhenTTSIsInitialized() {
-        Log.i("STT", "startWhenTTSIsInitialized() was called");
+   //     Log.i("STT", "startWhenTTSIsInitialized() was called");
 
 
      /*   for (Locale locale : locales) {
@@ -514,8 +513,8 @@ public class ExampleDialog extends AppCompatDialogFragment {
             map.put("timestamp", ServerValue.TIMESTAMP);
             //newPost.child("data").updateChildren(map);
             newPost.child("date").setValue(ServerValue.TIMESTAMP);
-            mDatabase.keepSynced(true);
-            newPost.keepSynced(true);
+          //  mDatabase.keepSynced(true);
+       //     newPost.keepSynced(true);
 
     }
 

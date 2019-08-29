@@ -26,12 +26,15 @@ public class MainActivity extends AppCompatActivity implements ExampleDialog.Exa
     public  TabItem tabSentences;
     private  List<Languages> languagesList = new ArrayList<>();
 
-
+    static {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         setContentView(R.layout.activity_main);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
 
 
 
