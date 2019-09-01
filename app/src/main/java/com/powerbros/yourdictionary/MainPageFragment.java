@@ -265,17 +265,22 @@ public class MainPageFragment extends Fragment {
                 final DatabaseReference mDatabaseDickey = databaseReference.child(post_key);//Sözcük push key değeri
                // final DatabaseReference mWordLang = mDatabaseDickey.child("wordLang");
 
-                  int result = 0;
+
+
+
+                // Listedeki itemlere tiklandiği zaman..
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int result = 0;
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
 
                             try
                             {
-                                if(model.getWordLang().get("getName")!=null){
                                     result = mTTS.setLanguage(Locale.forLanguageTag( model.getWordLang().get("getName")));
 
-                                }
                             }catch (Exception e){
-                              //  result = mTTS.setLanguage(Locale.getDefault());
+                                //  result = mTTS.setLanguage(Locale.getDefault());
                             }
                         }
 
@@ -285,13 +290,6 @@ public class MainPageFragment extends Fragment {
                         else{
                             //.setEnabled(true);
                         }
-
-
-                // Listedeki itemlere tiklandiği zaman..
-                holder.mView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
                         speak();
                     }
                     private void speak(){
