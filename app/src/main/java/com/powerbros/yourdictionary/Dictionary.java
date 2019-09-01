@@ -13,7 +13,9 @@ public class Dictionary {
 
 
     private String word,meaning,sentence,meaningSentence;
+
     private Map<String, String> timestamp;
+    private Map<String, String> wordLang;
     public Dictionary() {
 
     }
@@ -29,6 +31,15 @@ public class Dictionary {
         this.word = word;
         this.meaning = meaing;
     }
+
+    public Map<String, String> getWordLang() {
+        return wordLang;
+    }
+
+    public void setWordLang(Map<String, String> wordLang) {
+        this.wordLang = wordLang;
+    }
+
     public void setTimestamp(Map<String, String> timeStamp) {
         this.timestamp= timestamp;
     }
@@ -65,6 +76,7 @@ public class Dictionary {
    public void setMeaning(String meaing) {
         this.meaning = meaing;
     }
+
 
     public static String getTimeDate(long timestamp)
     {

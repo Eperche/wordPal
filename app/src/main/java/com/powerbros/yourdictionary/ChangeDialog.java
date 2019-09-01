@@ -37,7 +37,7 @@ import java.util.Locale;
 
 
 public class    ChangeDialog extends AppCompatDialogFragment {
-    private static final String TAG = "STT" ;
+ //   private static final String TAG = "STT" ;
     private DatabaseReference mDatabase;
     private DatabaseReference rootDatabase;
     private DatabaseReference databaseReference;
@@ -48,7 +48,7 @@ public class    ChangeDialog extends AppCompatDialogFragment {
     private EditText editTextMeaning;
     private ImageButton imageButtonEdit;
     private ImageButton imageButtonMeaning;
-
+    public   List<Languages> languagesList = new ArrayList<>();
     private String word;
     private String equivalent;
     private String post_key;
@@ -396,7 +396,7 @@ public class    ChangeDialog extends AppCompatDialogFragment {
       /*  LinkedHashSet<Locale> hashSet = new LinkedHashSet<Locale>();
         LinkedHashSet<String> listem = new LinkedHashSet<String>();*/
 
-        List<Languages> languagesList = new ArrayList<>();
+       /*
         int x = 0;
 
         for(Locale l:locales)
@@ -407,8 +407,8 @@ public class    ChangeDialog extends AppCompatDialogFragment {
                 Languages languages = new Languages(l.getDisplayName(),l.getLanguage());
 
                 languagesList.add(languages);
-            /*    hashSet.add(l);
-                listem.add(l.getLanguage());*/
+            //    hashSet.add(l);
+            //    listem.add(l.getLanguage());
                 if(l.getLanguage()==Locale.getDefault().getLanguage()){
                     defaultPosition=x;
                     //      Toast.makeText(getActivity(), "Default: "+defaultPosition, Toast.LENGTH_SHORT).show();
@@ -418,7 +418,7 @@ public class    ChangeDialog extends AppCompatDialogFragment {
 
             }
 
-        }
+        }*/
 
         Ladapter = new ArrayAdapter<Languages>(getActivity(), android.R.layout.simple_spinner_item,languagesList){
     /*        @Override

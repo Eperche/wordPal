@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.speech.tts.TextToSpeech;
+//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -60,9 +61,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Executor;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+//import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainPageFragment extends Fragment {
 
@@ -86,13 +86,13 @@ public class MainPageFragment extends Fragment {
     RecyclerView recyclerView;
     FirebaseRecyclerOptions <Dictionary> options;
     FirebaseRecyclerAdapter<Dictionary,dictionaryViewHolder> adapter;
-    CircleImageView addImage;
+  //  CircleImageView addImage;
     TextView mTextView;
     ImageButton  addImage1;
     private AdView mAdView;
     ExampleDialog exampleDialog = new ExampleDialog();
 
-    private ExampleDialog.ExampleDialogListener listener;
+ //   private ExampleDialog.ExampleDialogListener listener;
 
     ProgressBar progressBar;
 
@@ -123,6 +123,8 @@ public class MainPageFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
      //   showB();
      //   FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        flagDecoration = false;
+
         mAuth = FirebaseAuth.getInstance();
 
         mTextView = (TextView)getView().findViewById(R.id.no_word);
@@ -131,6 +133,34 @@ public class MainPageFragment extends Fragment {
         progressBar= (ProgressBar)getView().findViewById(R.id.progrresbarr);
         progressBar.setVisibility(View.VISIBLE);
 
+
+        mTTS = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS){
+
+                    //      Log.i("STT", "getLanguages() was called");
+
+                    for(Locale l:locales)
+                    {
+                        int res = mTTS.isLanguageAvailable(l);
+                        if(res == TextToSpeech.LANG_COUNTRY_AVAILABLE){
+                            Languages languages = new Languages(l.getDisplayName(),l.getLanguage());
+                            //   Toast.makeText(getActivity(), l.getDisplayName(), Toast.LENGTH_SHORT).show();
+                            languagesList.add(languages);
+            /*    hashSet.add(l);
+                listem.add(l.getLanguage());*/
+
+                        }
+                    }
+                    //     Log.d("STT", "MainPageFrag-size: "+languagesList.size());
+                    //mainPageFragmentlistener.applyList(languagesList);
+
+
+                }
+
+            }
+        });
         MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -155,11 +185,12 @@ public class MainPageFragment extends Fragment {
                 }
                 else{
              //       Log.d(TAG, "getCurrentUser() not null)");
-                    final String user_id = mAuth.getCurrentUser().getUid();
+              //      final String user_id = mAuth.getCurrentUser().getUid();
                     mCurrentUser = mAuth.getCurrentUser();
                     databaseReference = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
                     databaseReference.keepSynced(true);
-                    DatabaseReference no_word =FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
+                  DatabaseReference no_word =FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
+                //    DatabaseReference no_word =FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid());
 
                     showDictionary();
                     no_word.addValueEventListener(new ValueEventListener() {
@@ -198,42 +229,14 @@ public class MainPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 openDialog();
+
             }
 
 
 
 
         });
-        mTTS = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS){
 
-              //      Log.i("STT", "getLanguages() was called");
-
-                    int x = 0;
-                    int y = 0;
-
-                    for(Locale l:locales)
-                    {
-                        int res = mTTS.isLanguageAvailable(l);
-                        if(res == TextToSpeech.LANG_COUNTRY_AVAILABLE){
-                            Languages languages = new Languages(l.getDisplayName(),l.getLanguage());
-                            //   Toast.makeText(getActivity(), l.getDisplayName(), Toast.LENGTH_SHORT).show();
-                            languagesList.add(languages);
-            /*    hashSet.add(l);
-                listem.add(l.getLanguage());*/
-
-                        }
-                    }
-                    //     Log.d("STT", "MainPageFrag-size: "+languagesList.size());
-                    //mainPageFragmentlistener.applyList(languagesList);
-
-
-                }
-
-            }
-        });
 
     }
 
@@ -260,11 +263,51 @@ public class MainPageFragment extends Fragment {
                 holder.meaning.setText(model.getMeaning());
 
                 final DatabaseReference mDatabaseDickey = databaseReference.child(post_key);//Sözcük push key değeri
+               // final DatabaseReference mWordLang = mDatabaseDickey.child("wordLang");
+
+                  int result = 0;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+
+                            try
+                            {
+                                if(model.getWordLang().get("getName")!=null){
+                                    result = mTTS.setLanguage(Locale.forLanguageTag( model.getWordLang().get("getName")));
+
+                                }
+                            }catch (Exception e){
+                              //  result = mTTS.setLanguage(Locale.getDefault());
+                            }
+                        }
+
+                        if(result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
+                            //Log.d("TTS", "Language not supported");
+                        }
+                        else{
+                            //.setEnabled(true);
+                        }
+
+
+                // Listedeki itemlere tiklandiği zaman..
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        speak();
+                    }
+                    private void speak(){
+
+                        mTTS.speak(model.getWord(),TextToSpeech.QUEUE_FLUSH,null);
+
+                    }
+
+                });
 
                 holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
                         ChangeDialog changeDialog = new ChangeDialog();
+                        //changeDialog.languagesList = this
+                        changeDialog.languagesList = languagesList;
                         changeDialog.setEquivalent(model.getMeaning());
                         changeDialog.setWord(model.getWord());
                         changeDialog.setPost_key(post_key);
@@ -327,21 +370,37 @@ public class MainPageFragment extends Fragment {
         };
 
     //    GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),1);
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
+        final LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
         linearLayoutManager.setReverseLayout(true);
        linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),
-                linearLayoutManager.getOrientation());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation());
 
         if(!flagDecoration)//RecyclerView decorator not adding extra padding on refresh when adding this code
         {
             recyclerView.addItemDecoration(dividerItemDecoration);
             flagDecoration = true;
         }
-
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int testimonycount = adapter.getItemCount();
+                int lastVisiblePosition =
+                        linearLayoutManager.findLastCompletelyVisibleItemPosition();
+                // If the recycler view is initially being loaded or the
+                // user is at the bottom of the list, scroll to the bottom
+                // of the list to show the newly added message.
+                if (lastVisiblePosition == -1 ||
+                        (positionStart >= (testimonycount - 1) &&
+                                lastVisiblePosition == (positionStart - 1))) {
+                    recyclerView.scrollToPosition(positionStart);
+                }
+            }
+        });
         adapter.startListening();
         recyclerView.setHasFixedSize(true);
+
 
         recyclerView.setAdapter(adapter);
 
@@ -477,6 +536,7 @@ public class MainPageFragment extends Fragment {
         exampleDialog.languagesList = this.getLanguagesList();
         exampleDialog.show(getFragmentManager(),"word dialog");
     }
+
     private void openSentencesDialog(String post_key,String word) {
         ExampleDialog sentencesDialog = new ExampleDialog();
         sentencesDialog.setPost_key(post_key);
@@ -566,6 +626,15 @@ public class MainPageFragment extends Fragment {
             adapter.startListening();
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(mTTS != null){
+            mTTS.stop();
+        }
+    }
+
     public  String getDate(long timestamp)
     {
         Date date = new Date(timestamp);

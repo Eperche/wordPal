@@ -506,13 +506,16 @@ public class ExampleDialog extends AppCompatDialogFragment {
     }
 
 
-    private void addNewSample(DatabaseReference newPost,String word, String meaning) {
+    private void addNewSample(final DatabaseReference newPost, String word, String meaning) {
             Dictionary dictionary = new Dictionary(word,meaning);
             newPost.setValue(dictionary);
             Map map = new HashMap();
             map.put("timestamp", ServerValue.TIMESTAMP);
             //newPost.child("data").updateChildren(map);
+            newPost.child("wordLang").setValue(spinner.getSelectedItem());
+            newPost.child("meaningLang").setValue(spinner1.getSelectedItem());
             newPost.child("date").setValue(ServerValue.TIMESTAMP);
+
           //  mDatabase.keepSynced(true);
        //     newPost.keepSynced(true);
 
