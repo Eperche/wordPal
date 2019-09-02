@@ -1,5 +1,6 @@
 package com.powerbros.yourdictionary;
 
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import android.speech.tts.TextToSpeech;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Locale;
+
 public class Fragment2 extends Fragment  {
 
 
@@ -41,7 +45,7 @@ public class Fragment2 extends Fragment  {
     private FirebaseAuth mAuth;
    // private DatabaseReference mDatabaseUser;
     private FirebaseUser mCurrentUser;
-
+    private TextToSpeech mTTS;
     private String post_key;
   //  private String post_keySentence;
     private String post_word;
@@ -100,7 +104,19 @@ public class Fragment2 extends Fragment  {
 
             }
         });
+        mTTS = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS){
 
+
+
+
+
+                }
+
+            }
+        });
         adView1 =getView().findViewById(R.id.google_adbanner_sentences);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView1.loadAd(adRequest);
@@ -214,6 +230,41 @@ public class Fragment2 extends Fragment  {
                 holder.sentence.setText(model.getSentence());
                 holder.meaningSentence.setText(model.getMeaningSentence());
 
+                final DatabaseReference mWordLang = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary").child(post_key).child("wordLang");;//Sözcük push key değeri
+                final String[] mGetLang = new String[1];
+                mWordLang.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        try{
+                            mGetLang[0] = dataSnapshot.child("getName").getValue().toString();
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                mTTS.setLanguage(Locale.forLanguageTag( mGetLang[0]));
+                            }
+                        }
+                      catch (Exception e){
+
+                      }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        speak();
+                    }
+                    private void speak(){
+
+                        mTTS.speak(model.getSentence(),TextToSpeech.QUEUE_FLUSH,null);
+
+                    }
+                });
                 holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
@@ -257,6 +308,13 @@ public class Fragment2 extends Fragment  {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(mTTS != null){
+            mTTS.stop();
+        }
+    }
 }
     /*    Query query =  FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary").child(post_key).orderByChild("sentences").equalTo("sentences");
 
