@@ -27,7 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -503,6 +503,12 @@ public class ExampleDialog extends AppCompatDialogFragment {
              final DatabaseReference newPost = mDatabase.push();
              addNewSample(newPost,word,meaning);
          }
+         else if(TextUtils.isEmpty(word)){
+             Toast.makeText(getActivity(), "Please enter your word", Toast.LENGTH_SHORT).show();
+         }
+         else if(TextUtils.isEmpty(meaning)){
+             Toast.makeText(getActivity(), "Please enter the  meaning", Toast.LENGTH_SHORT).show();
+         }
     }
 
 
@@ -623,6 +629,12 @@ public class ExampleDialog extends AppCompatDialogFragment {
         if(!TextUtils.isEmpty(sentence) && !TextUtils.isEmpty(SentenceMeaning)){
             final DatabaseReference newPost = mDatabaseSentences.push();
             addNewSampleaddSentences(newPost,sentence,SentenceMeaning);
+        }
+        else if(TextUtils.isEmpty(sentence)){
+            Toast.makeText(getActivity(), "Please enter your sentence", Toast.LENGTH_SHORT).show();
+        }
+        else if(TextUtils.isEmpty(SentenceMeaning)){
+            Toast.makeText(getActivity(), "Please enter the meaning of sentence", Toast.LENGTH_SHORT).show();
         }
     }
 

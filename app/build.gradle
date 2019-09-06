@@ -8,8 +8,8 @@ android {
         applicationId "com.powerbros.yourdictionary"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.0.1"
+        versionCode 10
+        versionName "1.0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

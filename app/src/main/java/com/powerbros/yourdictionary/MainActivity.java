@@ -1,11 +1,21 @@
 package com.powerbros.yourdictionary;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.FirebaseDatabase;
+
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.PagerAdapter;
@@ -25,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements ExampleDialog.Exa
     public TabItem tabWords;
     public  TabItem tabSentences;
     private  List<Languages> languagesList = new ArrayList<>();
+    private int RECORD_AUDIO_CODE = 1;
 
     static {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
@@ -32,10 +43,19 @@ public class MainActivity extends AppCompatActivity implements ExampleDialog.Exa
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
        // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         setContentView(R.layout.activity_main);
 
-
+        if(ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED){
+            Toast.makeText(this, "You have already granted permission ", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            requestRecordAudio();
+        }
 
 
         toolbar =(Toolbar)findViewById(R.id.toolbar);
@@ -47,6 +67,43 @@ public class MainActivity extends AppCompatActivity implements ExampleDialog.Exa
         tabSentences=(TabItem)findViewById(R.id.sentences);
         viewPager =(ViewPager)findViewById(R.id.viewPager);
 
+    }
+
+    private void requestRecordAudio() {
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.RECORD_AUDIO)){
+
+            new AlertDialog.Builder(this).setTitle("Permisson Needed")
+                    .setMessage("This permisson is needed because of microphone usage ")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.RECORD_AUDIO},RECORD_AUDIO_CODE);
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+        }
+        else{
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.RECORD_AUDIO},RECORD_AUDIO_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if(requestCode ==RECORD_AUDIO_CODE){
+            if(grantResults.length >  0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.speech.tts.TextToSpeech;
 //import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -192,7 +193,7 @@ public class MainPageFragment extends Fragment {
                   DatabaseReference no_word =FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
                 //    DatabaseReference no_word =FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid());
 
-                    showDictionary();
+                    showDictionary(null);
                     no_word.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -240,7 +241,7 @@ public class MainPageFragment extends Fragment {
 
     }
 
-    private void showDictionary() {
+    private void showDictionary(String searchText) {
    //     Log.d(TAG, "showDictionary:success");
         recyclerView = (RecyclerView)getView().findViewById(R.id.recyclerview);
         mCurrentUser = mAuth.getCurrentUser();
@@ -250,9 +251,17 @@ public class MainPageFragment extends Fragment {
 
         /*   Query firebaseSearcQuery=databaseReference.orderByKey();
         options =new FirebaseRecyclerOptions.Builder<Dictionary>().setQuery(firebaseSearcQuery,Dictionary.class).build();*/
+        if(!TextUtils.isEmpty(searchText)){
+            String query= searchText.toLowerCase();
+            Query irebaseSearcQuery=databaseReference.orderByChild("word").startAt(query).endAt(query+"\uf8ff");
+            options =new FirebaseRecyclerOptions.Builder<Dictionary>().setQuery(irebaseSearcQuery,Dictionary.class).build();
+        }
 
-      options = new FirebaseRecyclerOptions.Builder<Dictionary>()
-                .setQuery(databaseReference,Dictionary.class).build();
+    else{
+            options = new FirebaseRecyclerOptions.Builder<Dictionary>()
+                    .setQuery(databaseReference,Dictionary.class).build();
+        }
+
 
         adapter = new FirebaseRecyclerAdapter<Dictionary, dictionaryViewHolder>(options) {
 
@@ -551,13 +560,13 @@ public class MainPageFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                firebaseSearch(query);
+                showDictionary(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                firebaseSearch(newText);
+                showDictionary(newText);
                 return false;
             }
         });
@@ -569,35 +578,6 @@ public class MainPageFragment extends Fragment {
 
     }
 
-    private void firebaseSearch(String searchText){
-
-        String query= searchText.toLowerCase();
-        Query irebaseSearcQuery=databaseReference.orderByChild("word").startAt(query).endAt(query+"\uf8ff");
-        options =new FirebaseRecyclerOptions.Builder<Dictionary>().setQuery(irebaseSearcQuery,Dictionary.class).build();
-
-        adapter = new FirebaseRecyclerAdapter<Dictionary, dictionaryViewHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull dictionaryViewHolder dictionaryViewHolder, int i, @NonNull Dictionary dictionary) {
-
-                dictionaryViewHolder.word.setText(dictionary.getWord());
-                dictionaryViewHolder.meaning.setText(dictionary.getMeaning());
-                dictionaryViewHolder.date.setVisibility(View.INVISIBLE);
-            }
-
-            @NonNull
-            @Override
-            public dictionaryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-                View view =LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_listem,parent,false);
-                dictionaryViewHolder dictionaryViewHolder =new dictionaryViewHolder(view);
-                return dictionaryViewHolder;
-            }
-        };
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),1);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        adapter.startListening();
-        recyclerView.setAdapter(adapter);
-
-    }
 
 
     @Override
