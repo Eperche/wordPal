@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements ExampleDialog.Exa
     public static PagerAdapter pagerAdapter;
     public TabItem tabWords;
     public  TabItem tabSentences;
-    private  List<Languages> languagesList = new ArrayList<>();
+   // private  List<Languages> languagesList = new ArrayList<>();
     private int RECORD_AUDIO_CODE = 1;
 
     static {
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements ExampleDialog.Exa
 
         if(ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED){
-            Toast.makeText(this, "You have already granted permission ", Toast.LENGTH_SHORT).show();
+         //   Toast.makeText(this, "You have already granted permission ", Toast.LENGTH_SHORT).show();
         }
         else{
             requestRecordAudio();
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements ExampleDialog.Exa
         if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.RECORD_AUDIO)){
 
             new AlertDialog.Builder(this).setTitle("Permisson Needed")
-                    .setMessage("This permisson is needed because of microphone usage ")
+                    .setMessage("This permisson is needed because of microphone usage")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

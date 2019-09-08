@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
+//import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -99,6 +99,7 @@ public class MainPageFragment extends Fragment {
 
 
     private boolean flagDecoration = false;
+    private boolean flagList = true;
  //   View a, b;
 
 
@@ -145,10 +146,11 @@ public class MainPageFragment extends Fragment {
                     for(Locale l:locales)
                     {
                         int res = mTTS.isLanguageAvailable(l);
-                        if(res == TextToSpeech.LANG_COUNTRY_AVAILABLE){
+                        if(res == TextToSpeech.LANG_COUNTRY_AVAILABLE && flagList){
                             Languages languages = new Languages(l.getDisplayName(),l.getLanguage());
                             //   Toast.makeText(getActivity(), l.getDisplayName(), Toast.LENGTH_SHORT).show();
                             languagesList.add(languages);
+
             /*    hashSet.add(l);
                 listem.add(l.getLanguage());*/
 
@@ -159,7 +161,8 @@ public class MainPageFragment extends Fragment {
 
 
                 }
-
+                flagList=false; // oncreated her açıldığında array liste tekrar tekrar diller ekleniyor.Bu yüzden flag kullandıldı.
+                //Oncreatead Tekrar çalışınca bu metot tekrar calisiyor ama sınıf tekrar tanımlanmıyor.Flag list yukarda true onCreated tekrar calisinca tekrardan true olmuyor.
             }
         });
         MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
