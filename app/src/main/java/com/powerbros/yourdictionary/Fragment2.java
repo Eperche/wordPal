@@ -50,6 +50,7 @@ public class Fragment2 extends Fragment  {
   //  private String post_keySentence;
     private String post_word;
     private AdView adView1;
+    private AdView adView2;
 
 
 
@@ -84,13 +85,17 @@ public class Fragment2 extends Fragment  {
    public void showB() {
         a.setVisibility(View.VISIBLE);
         b.setVisibility(View.INVISIBLE);
-
-    }
+       adView2 =getView().findViewById(R.id.adView2);
+       AdRequest adRequest = new AdRequest.Builder().build();
+       adView2.loadAd(adRequest);
+   }
     public void showA() {
         a.setVisibility(View.INVISIBLE);
         b.setVisibility(View.VISIBLE);
 
-
+        adView1 =getView().findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView1.loadAd(adRequest);
     }
 
 
@@ -111,15 +116,11 @@ public class Fragment2 extends Fragment  {
 
 
 
-
-
                 }
 
             }
         });
-        adView1 =getView().findViewById(R.id.google_adbanner_sentences);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView1.loadAd(adRequest);
+
 
         nothing_to_show_word = (TextView) getView().findViewById(R.id.nothing_to_show_word);
 

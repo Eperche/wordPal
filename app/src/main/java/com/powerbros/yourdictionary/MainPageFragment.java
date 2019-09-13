@@ -602,6 +602,7 @@ public class MainPageFragment extends Fragment {
 
     @Override
     public void onResume() {
+        mAuth.addAuthStateListener(mAuthListener);
         super.onResume();
         if(adapter!=null){
             adapter.startListening();

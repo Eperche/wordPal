@@ -5,7 +5,6 @@
 
     <include layout="@layout/nothing_to_show"/>
     <include layout="@layout/fragment_activity"/>
-    <include layout="@layout/google_ads_fragment2"></include>
 
 
 </FrameLayout>
