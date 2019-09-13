@@ -50,7 +50,6 @@ public class Fragment2 extends Fragment  {
   //  private String post_keySentence;
     private String post_word;
     private AdView adView1;
-    private AdView adView2;
 
 
 
@@ -59,14 +58,14 @@ public class Fragment2 extends Fragment  {
     RecyclerView recyclerView;
     FirebaseRecyclerOptions<Dictionary> options;
     FirebaseRecyclerAdapter<Dictionary, dictionaryViewHolder> adapter;
-    TextView nothing_to_show_word;
+
+    TextView mTextView;
 
 
 
  /*   private boolean flagDecoration = false;
     private boolean showB = false;*/
 
-      View a, b;
 
 
     @Nullable
@@ -74,29 +73,11 @@ public class Fragment2 extends Fragment  {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
-        View root = inflater.inflate(R.layout.tumlesik, container, false);
-
-         a = root.findViewById(R.id.nothing_to_show);
-        b = root.findViewById(R.id.fragment2);
-
+        View root = inflater.inflate(R.layout.fragment_activity, container, false);
         return root;
 
     }
-   public void showB() {
-        a.setVisibility(View.VISIBLE);
-        b.setVisibility(View.INVISIBLE);
-       adView2 =getView().findViewById(R.id.adView2);
-       AdRequest adRequest = new AdRequest.Builder().build();
-       adView2.loadAd(adRequest);
-   }
-    public void showA() {
-        a.setVisibility(View.INVISIBLE);
-        b.setVisibility(View.VISIBLE);
 
-        adView1 =getView().findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView1.loadAd(adRequest);
-    }
 
 
     @Override
@@ -121,9 +102,12 @@ public class Fragment2 extends Fragment  {
             }
         });
 
+        adView1 =getView().findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView1.loadAd(adRequest);
 
-        nothing_to_show_word = (TextView) getView().findViewById(R.id.nothing_to_show_word);
-
+        mTextView = (TextView)getView().findViewById(R.id.no_word2);
+        mTextView.setVisibility(View.INVISIBLE);
         mAuth = FirebaseAuth.getInstance();
 
         if(post_key!=null){
@@ -135,13 +119,12 @@ public class Fragment2 extends Fragment  {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()){
                     //    Toast.makeText(getActivity(), " exixst", Toast.LENGTH_SHORT).show();
-                        showA();
+                        mTextView.setVisibility(View.INVISIBLE);
                         showSentences();
                     }
                     else{
                      //   Toast.makeText(getActivity(), "No exixst", Toast.LENGTH_SHORT).show();
-                        showB();
-                        nothing_to_show_word.setText("No sentences to display ");
+                        mTextView.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -153,7 +136,7 @@ public class Fragment2 extends Fragment  {
 
         }else{
 
-            showB();
+            mTextView.setVisibility(View.VISIBLE);
         }
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
