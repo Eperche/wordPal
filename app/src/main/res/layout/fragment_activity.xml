@@ -18,10 +18,13 @@
         android:id="@+id/no_word2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#99C7D0E0"
-        android:textSize="25dp"
+        android:textColor="#CCC7D0E0"
+        android:padding="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:textSize="20dp"
         android:layout_centerInParent="true"
-        android:text="No sentences to display" />
+        android:text="Select the word to list of sentences" />
 
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"

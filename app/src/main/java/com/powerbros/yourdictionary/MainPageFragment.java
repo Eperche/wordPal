@@ -91,7 +91,7 @@ public class MainPageFragment extends Fragment {
     TextView mTextView;
     ImageButton  addImage1;
     private AdView mAdView;
-    ExampleDialog exampleDialog = new ExampleDialog();
+
 
  //   private ExampleDialog.ExampleDialogListener listener;
 
@@ -543,12 +543,15 @@ public class MainPageFragment extends Fragment {
     }
 
     private void openDialog() {
+        ExampleDialog exampleDialog = new ExampleDialog();
         exampleDialog.languagesList = this.getLanguagesList();
+        exampleDialog.setCancelable(false);
         exampleDialog.show(getFragmentManager(),"word dialog");
     }
 
     private void openSentencesDialog(String post_key,String word) {
         ExampleDialog sentencesDialog = new ExampleDialog();
+        sentencesDialog.setCancelable(false);
         sentencesDialog.setPost_key(post_key);
         sentencesDialog.setWord(word);
         sentencesDialog.languagesList=languagesList;
@@ -623,6 +626,8 @@ public class MainPageFragment extends Fragment {
 
         return date.toString();
     }
+
+
   /*  @Override
     public void onAttach(Context context) {
         super.onAttach(context);

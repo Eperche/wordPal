@@ -23,6 +23,7 @@ import android.view.View;
 
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -47,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 
-public class ExampleDialog extends AppCompatDialogFragment {
+    public class ExampleDialog extends AppCompatDialogFragment {
     private static final String TAG = "STT" ;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabaseSentences;
@@ -61,6 +62,8 @@ public class ExampleDialog extends AppCompatDialogFragment {
     private ImageButton imageButtonMeaning;
 
     private ExampleDialogListener listener;
+
+
     private String post_key;
     private String word;
 
@@ -98,30 +101,27 @@ public class ExampleDialog extends AppCompatDialogFragment {
     private boolean addPosition = false;
     private boolean addPosition1 = false;
     public   List<Languages> languagesList = new ArrayList<>();
+    private Button positiveButton;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         addPosition = false;
         addPosition1 = false;
 
-
-
         mAuth = FirebaseAuth.getInstance();
 
       //  makePermanet();
         mCurrentUser =mAuth.getCurrentUser();
-        mDatabaseUser = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
-        mDatabase = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
+        //mDatabaseUser = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
+        //mDatabase = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary");
 
-        mDatabase.keepSynced(true);
-
-
-
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         View view = inflater.inflate(R.layout.open_dialog,null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
         if(!TextUtils.isEmpty(word))
         builder.setView(view).setTitle("Create a sentence about "+ word);
         else
@@ -130,10 +130,12 @@ public class ExampleDialog extends AppCompatDialogFragment {
                 builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        dialog.dismiss();
                     }
                 });
-                builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+
+
+                builder.setPositiveButton("SAVE", null); /* new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(!TextUtils.isEmpty(word)){
@@ -142,10 +144,11 @@ public class ExampleDialog extends AppCompatDialogFragment {
                             addSentences();
                         }
                         else
-                        addDictionary();
+                            addDictionary();
                     }
-                }) ;
-        if(!TextUtils.isEmpty(word)){
+                });*/
+
+                 if(!TextUtils.isEmpty(word)){
                 builder.setNeutralButton("Sentences", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -154,6 +157,7 @@ public class ExampleDialog extends AppCompatDialogFragment {
                     }
                 });
         }
+
          mTTS = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
@@ -195,8 +199,7 @@ public class ExampleDialog extends AppCompatDialogFragment {
 */
 
 
-
-        return builder.create();
+        return  builder.create();
     }
     private void startMic2(){
 
@@ -495,25 +498,32 @@ public class ExampleDialog extends AppCompatDialogFragment {
     }
 
 
-    private void addDictionary() {
+    private boolean addDictionary() {
          String word = editTextWord.getText().toString().trim().toLowerCase();
          String meaning = editTextMeaning.getText().toString().trim().toLowerCase();
 
          if(!TextUtils.isEmpty(word) && !TextUtils.isEmpty(meaning)){
-             final DatabaseReference newPost = mDatabase.push();
-             addNewSample(newPost,word,meaning);
+           //  final DatabaseReference newPost = mDatabase.push();
+             addNewSample(/*newPost,*/word,meaning);
+             return true;
          }
          else if(TextUtils.isEmpty(word)){
              Toast.makeText(getActivity(), "Please enter your word", Toast.LENGTH_SHORT).show();
+             return false;
          }
          else if(TextUtils.isEmpty(meaning)){
              Toast.makeText(getActivity(), "Please enter the  meaning", Toast.LENGTH_SHORT).show();
+             return false;
          }
+         else
+             return false;
+
     }
 
 
-    private void addNewSample(final DatabaseReference newPost, String word, String meaning) {
+    private void addNewSample(/*final DatabaseReference newPost,*/ String word, String meaning) {
             Dictionary dictionary = new Dictionary(word,meaning);
+            DatabaseReference newPost =FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary").push();
             newPost.setValue(dictionary);
             Map map = new HashMap();
             map.put("timestamp", ServerValue.TIMESTAMP);
@@ -522,7 +532,7 @@ public class ExampleDialog extends AppCompatDialogFragment {
             newPost.child("meaningLang").setValue(spinner1.getSelectedItem());
             newPost.child("date").setValue(ServerValue.TIMESTAMP);
 
-          //  mDatabase.keepSynced(true);
+            newPost.keepSynced(true);
        //     newPost.keepSynced(true);
 
     }
@@ -622,20 +632,24 @@ public class ExampleDialog extends AppCompatDialogFragment {
             }
         });
     }
-    private void addSentences() {
+    private boolean addSentences() {
         String sentence = editTextWord.getText().toString().trim();
         String SentenceMeaning = editTextMeaning.getText().toString().trim();
-
+        mDatabaseSentences = FirebaseDatabase.getInstance().getReference().child(mCurrentUser.getUid()).child("Dictionary").child(post_key).child("sentences");
         if(!TextUtils.isEmpty(sentence) && !TextUtils.isEmpty(SentenceMeaning)){
             final DatabaseReference newPost = mDatabaseSentences.push();
             addNewSampleaddSentences(newPost,sentence,SentenceMeaning);
+            return true;
         }
         else if(TextUtils.isEmpty(sentence)){
             Toast.makeText(getActivity(), "Please enter your sentence", Toast.LENGTH_SHORT).show();
+            return false;
         }
         else if(TextUtils.isEmpty(SentenceMeaning)){
             Toast.makeText(getActivity(), "Please enter the meaning of sentence", Toast.LENGTH_SHORT).show();
+            return false;
         }
+        return false;
     }
 
     private void addNewSampleaddSentences(DatabaseReference newPost, String sentence, String SentenceMeaning) {
@@ -654,7 +668,7 @@ public class ExampleDialog extends AppCompatDialogFragment {
         try {
             listener =(ExampleDialogListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()+"must implement ExampleDialogListener");
+        throw new ClassCastException(context.toString()+"must implement ExampleDialogListener");
         }
     }
 
@@ -673,4 +687,25 @@ public class ExampleDialog extends AppCompatDialogFragment {
 
     }*/
 
+        @Override
+        public void onResume() {
+            super.onResume();
+            final AlertDialog alertDialog = (AlertDialog) getDialog();
+            Button okButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!TextUtils.isEmpty(word)){
+
+                        if(addSentences())
+                        alertDialog.dismiss();
+                    }
+                    else {
+                        if(addDictionary())
+                         alertDialog.dismiss();
+                    }
+
+                }
+            });
+        }
 }

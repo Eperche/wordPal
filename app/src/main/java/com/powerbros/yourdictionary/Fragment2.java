@@ -124,6 +124,7 @@ public class Fragment2 extends Fragment  {
                     }
                     else{
                      //   Toast.makeText(getActivity(), "No exixst", Toast.LENGTH_SHORT).show();
+                        mTextView.setText("No sentences added to "+"'"+post_word+"'" +" yet");
                         mTextView.setVisibility(View.VISIBLE);
                     }
                 }
